@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
@@ -38,7 +38,6 @@
     "devDependencies": {
         "@open-wc/testing": "3.1.6",
         "augment-vir": "2.5.0",
-        "chai": "4.3.6",
         "virmator": "3.0.6"
     }
 }

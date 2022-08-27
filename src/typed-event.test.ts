@@ -19,5 +19,8 @@ describe(defineTypedEvent.name, () => {
 
         assert.instanceOf(stuffInstance, stuff);
         assert.instanceOf(stuffInstance, derpTypedEvent);
+        assert.strictEqual(thing.type, 'derp');
+        assert.strictEqual(instance.type, 'derp');
+        assert.strictEqual(derpTypedEvent.type, 'derp');
     });
 });

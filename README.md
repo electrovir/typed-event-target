@@ -61,3 +61,19 @@ import {defineTypedEvent} from 'typed-event-target';
 export class MyEvent1 extends defineTypedEvent('my-event-type-1') {}
 export class MyEvent2 extends defineTypedEvent('my-event-type-2') {}
 ```
+
+## Typed Custom Events
+
+Typed custom events are also provided, so you can add type guards to the data included in your events. Note the extra `()` call after `defineTypedCustomEvent`. This is needed so you don't have to duplicate the Event type information as a function generic.
+
+<!-- example-link: ./src/readme-examples/typed-custom-events.example.ts -->
+
+```TypeScript
+import {defineTypedCustomEvent} from 'typed-event-target';
+
+export class MyEvent1 extends defineTypedCustomEvent<string>()('my-event-type-1') {}
+export class MyEvent2 extends defineTypedCustomEvent<number>()('my-event-type-2') {}
+
+new MyEvent1({detail: 'five'});
+new MyEvent2({detail: 5});
+```

@@ -12,6 +12,8 @@ export function defineTypedEvent<EventTypeGeneric extends string>(type: EventTyp
         }
     };
 
-    return TypedEventConstructor as unknown as (new () => TypedEvent<EventTypeGeneric>) &
+    return TypedEventConstructor as (new (
+        eventInitDict?: EventInit,
+    ) => TypedEvent<EventTypeGeneric>) &
         Overwrite<typeof Event, Pick<TypedEvent<EventTypeGeneric>, 'type'>>;
 }
