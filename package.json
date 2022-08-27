@@ -32,11 +32,14 @@
         "prepublishOnly": "npm run compile && npm run test:full",
         "spellcheck": "virmator spellcheck",
         "start": "npm install && vite --force --config .virmator/vite/vite.config.ts",
-        "test": "virmator test",
+        "test": "virmator test-web",
         "test:full": "npm run test:types && npm test && npm run spellcheck && virmator format check",
         "test:types": "tsc --noEmit"
     },
     "devDependencies": {
+        "@open-wc/testing": "3.1.6",
+        "augment-vir": "2.5.0",
+        "chai": "4.3.6",
         "virmator": "3.0.6"
     }
 }
