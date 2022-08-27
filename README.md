@@ -7,3 +7,57 @@ This package provides a strongly typed `EventTarget` sub class. Provided types p
 ```bash
 npm i typed-event-target
 ```
+
+### TypedEventTarget
+
+Extend `TypedEventTarget` to create your own event target with specific types, or just use it to add types to an existing event target.
+
+<!-- example-link: ./src/readme-examples/my-event-target.example.ts -->
+
+```TypeScript
+import {TypedEventTarget} from 'typed-event-target';
+import {MyEvent1, MyEvent2} from './typed-events.example';
+
+export class MyTypedEventTarget extends TypedEventTarget<MyEvent1 | MyEvent2> {}
+```
+
+<!-- example-link: ./src/readme-examples/adding-types.example.ts -->
+
+```TypeScript
+import {TypedEventTarget} from 'typed-event-target';
+import {MyEvent1, MyEvent2} from './typed-events.example';
+
+export const nowWithTypes = new EventTarget() as TypedEventTarget<MyEvent1 | MyEvent2>;
+```
+
+In the end, `nowWithTypes` will be functionally equivalent to any new instance of `MyEventTarget` (`new MyEventTarget())` because `MyEventTarget` is a sub-class of `EventTarget` with nothing extra but type information. (Though of course, `nowWithTypes` won't be an instance of `MyEventTarget` because `MyEventTarget` is a separate run-time class.)
+
+Instances of `TypedEventTarget` can be used just like any instance of `EventTarget`:
+
+<!-- example-link: ./src/readme-examples/event-target-usage.example.ts -->
+
+```TypeScript
+import {MyTypedEventTarget} from './my-event-target.example';
+import {MyEvent1} from './typed-events.example';
+
+const myInstance = new MyTypedEventTarget();
+
+myInstance.addEventListener('my-event-type-1', (event) => {
+    console.log(event);
+});
+myInstance.dispatchEvent(new MyEvent1());
+myInstance.removeEventListener('my-event-type-2', () => {});
+```
+
+## Typed Events
+
+You are free to add the `type` property information to your `Event` sub-classes (for passing into `TypedEventTarget`'s generic) however you wish, but this package provides an easy way to do so with `defineTypedEvent`:
+
+<!-- example-link: ./src/readme-examples/typed-events.example.ts -->
+
+```TypeScript
+import {defineTypedEvent} from 'typed-event-target';
+
+export class MyEvent1 extends defineTypedEvent('my-event-type-1') {}
+export class MyEvent2 extends defineTypedEvent('my-event-type-2') {}
+```
