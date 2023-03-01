@@ -1,5 +1,5 @@
+import {ArrayElement} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
-import {ArrayElement} from 'augment-vir';
 import {Constructed} from './augments/constructor';
 import {SubEventDerp, SubEventHerp, SubEventType} from './test/test-events';
 import {

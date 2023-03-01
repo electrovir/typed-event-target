@@ -1,4 +1,4 @@
-import {Overwrite} from 'augment-vir';
+import {Overwrite} from '@augment-vir/common';
 
 export interface TypedEvent<EventTypeGeneric extends string> extends Event {
     readonly type: EventTypeGeneric;

@@ -1,4 +1,4 @@
-import {ArrayElement} from 'augment-vir';
+import {ArrayElement} from '@augment-vir/common';
 import {Constructed} from '../augments/constructor';
 import {defineTypedEvent} from '../typed-event';
 

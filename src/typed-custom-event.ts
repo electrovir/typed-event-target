@@ -1,4 +1,4 @@
-import {Overwrite, RequiredBy} from 'augment-vir';
+import {Overwrite, RequiredBy} from '@augment-vir/common';
 
 export interface TypedCustomEvent<DetailGeneric, EventTypeGeneric extends string>
     extends CustomEvent<DetailGeneric> {
