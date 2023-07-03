@@ -1,5 +1,5 @@
 import {ExtractEventByType, ExtractEventTypes} from './event-types';
-import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventType} from './test/test-events';
+import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './test/test-events';
 
 describe('ExtractEventByType', () => {
     it('should extract event types from a list of possible events', () => {
@@ -10,7 +10,7 @@ describe('ExtractEventByType', () => {
     });
 
     it('should narrow a union of possible events', () => {
-        type NarrowedType = ExtractEventByType<PossibleEvent, typeof SubEventType.Derp>;
+        type NarrowedType = ExtractEventByType<PossibleEvent, typeof SubEventTypeEnum.Derp>;
 
         const validInstance: NarrowedType = new SubEventDerp();
         // @ts-expect-error
@@ -24,8 +24,8 @@ describe('ExtractEventTypes', () => {
     it('should extract event types from events', () => {
         type PossibleEventTypes = ExtractEventTypes<PossibleEvent>;
 
-        const validType1: PossibleEventTypes = SubEventType.Derp;
-        const validType2: PossibleEventTypes = SubEventType.Herp;
+        const validType1: PossibleEventTypes = SubEventTypeEnum.Derp;
+        const validType2: PossibleEventTypes = SubEventTypeEnum.Herp;
         // @ts-expect-error
         const invalidType1: PossibleEventTypes = '';
         // @ts-expect-error

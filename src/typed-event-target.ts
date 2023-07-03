@@ -1,6 +1,17 @@
+import {filterOutIndexes} from '@augment-vir/common';
 import {ExtractEventByType, ExtractEventTypes} from './event-types';
 
 export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> extends EventTarget {
+    private setupListeners: {
+        type: string;
+        callback: TypedEventListenerOrEventListenerObject<any>;
+        options: boolean | EventListenerOptions | undefined;
+    }[] = [];
+
+    public getListenerCount(): number {
+        return this.setupListeners.length;
+    }
+
     override addEventListener<EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>>(
         type: EventNameGeneric,
         callback: TypedEventListenerOrEventListenerObject<
@@ -8,11 +19,14 @@ export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> ext
         > | null,
         options?: boolean | AddEventListenerOptions | undefined,
     ): void {
-        return super.addEventListener(
+        super.addEventListener(
             type,
             callback as EventListenerOrEventListenerObject | null,
             options,
         );
+        if (callback) {
+            this.setupListeners.push({type, callback, options});
+        }
     }
 
     override dispatchEvent(event: PossibleEventsGeneric): boolean {
@@ -26,11 +40,56 @@ export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> ext
         > | null,
         options?: boolean | EventListenerOptions | undefined,
     ): void {
-        return super.removeEventListener(
+        super.removeEventListener(
             type,
             callback as EventListenerOrEventListenerObject | null,
             options,
         );
+
+        const previouslyAddedListenerIndex = this.setupListeners.findIndex((listener) => {
+            if (listener.type !== type) {
+                return false;
+            }
+
+            if (typeof options !== 'undefined' || typeof listener.options !== 'undefined') {
+                if (typeof options !== typeof listener.options) {
+                    return false;
+                }
+
+                if (
+                    typeof listener.options === 'boolean' &&
+                    typeof options === 'boolean' &&
+                    options !== listener.options
+                ) {
+                    return false;
+                } else if (
+                    typeof listener.options === 'object' &&
+                    typeof options === 'object' &&
+                    options.capture !== listener.options.capture
+                ) {
+                    return false;
+                }
+            }
+
+            if (listener.callback !== callback) {
+                return false;
+            }
+
+            return true;
+        });
+
+        this.setupListeners = filterOutIndexes(this.setupListeners, [previouslyAddedListenerIndex]);
+    }
+
+    public removeAllEventListeners(): void {
+        this.setupListeners.forEach((listenerSetup) => {
+            super.removeEventListener(
+                listenerSetup.type,
+                listenerSetup.callback,
+                listenerSetup.options,
+            );
+        });
+        this.setupListeners = [];
     }
 }
 
@@ -40,6 +99,7 @@ export interface TypedEventListener<EventGeneric extends Event> {
 export interface TypedEventListenerObject<EventGeneric extends Event> {
     handleEvent(event: EventGeneric): void;
 }
+
 export type TypedEventListenerOrEventListenerObject<EventGeneric extends Event> =
     | TypedEventListener<EventGeneric>
     | TypedEventListenerObject<EventGeneric>;

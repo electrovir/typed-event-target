@@ -2,13 +2,13 @@ import {ArrayElement} from '@augment-vir/common';
 import {Constructed} from '../augments/constructor';
 import {defineTypedEvent} from '../typed-event';
 
-export enum SubEventType {
+export enum SubEventTypeEnum {
     Herp = 'herp',
     Derp = 'derp',
 }
 
-export class SubEventHerp extends defineTypedEvent(SubEventType.Herp) {}
-export class SubEventDerp extends defineTypedEvent(SubEventType.Derp) {}
+export class SubEventHerp extends defineTypedEvent(SubEventTypeEnum.Herp) {}
+export class SubEventDerp extends defineTypedEvent(SubEventTypeEnum.Derp) {}
 
 export const possibleEvents = [
     SubEventHerp,
