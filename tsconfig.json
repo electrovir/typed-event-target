@@ -2,8 +2,8 @@
     "compilerOptions": {
         "declarationDir": "dist/types",
         "module": "ES2020",
-        "rootDir": "./src",
-        "outDir": "dist/esm"
+        "outDir": "dist/esm",
+        "rootDir": "./src"
     },
     "extends": "./tsconfig.base.json"
 }
