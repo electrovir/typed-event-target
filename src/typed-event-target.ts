@@ -1,7 +1,9 @@
 import {filterOutIndexes} from '@augment-vir/common';
 import {ExtractEventByType, ExtractEventTypes} from './event-types';
 
-export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> extends EventTarget {
+export class TypedEventTarget<
+    const PossibleEventsGeneric extends Readonly<Event>,
+> extends EventTarget {
     private setupListeners: {
         type: string;
         callback: TypedEventListenerOrEventListenerObject<any>;
@@ -12,7 +14,9 @@ export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> ext
         return this.setupListeners.length;
     }
 
-    override addEventListener<EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>>(
+    override addEventListener<
+        const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
+    >(
         type: EventNameGeneric,
         callback: TypedEventListenerOrEventListenerObject<
             ExtractEventByType<PossibleEventsGeneric, EventNameGeneric>
@@ -33,7 +37,9 @@ export class TypedEventTarget<PossibleEventsGeneric extends Readonly<Event>> ext
         return super.dispatchEvent(event);
     }
 
-    override removeEventListener<EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>>(
+    override removeEventListener<
+        const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
+    >(
         type: EventNameGeneric,
         callback: TypedEventListenerOrEventListenerObject<
             ExtractEventByType<PossibleEventsGeneric, EventNameGeneric>

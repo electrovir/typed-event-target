@@ -4,7 +4,7 @@ export interface TypedEvent<EventTypeGeneric extends string> extends Event {
     readonly type: EventTypeGeneric;
 }
 
-export function defineTypedEvent<EventTypeGeneric extends string>(type: EventTypeGeneric) {
+export function defineTypedEvent<const EventTypeGeneric extends string>(type: EventTypeGeneric) {
     const TypedEventConstructor = class extends Event {
         static readonly type = type;
         constructor(eventInitDict?: EventInit) {

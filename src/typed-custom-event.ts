@@ -10,7 +10,7 @@ export type TypedCustomEventInit<DetailGeneric> = RequiredBy<
     'detail'
 >;
 
-export function defineTypedCustomEvent<DetailGeneric = undefined>() {
+export function defineTypedCustomEvent<const DetailGeneric = undefined>() {
     return <EventTypeGeneric extends string>(type: EventTypeGeneric) => {
         const TypedEventConstructor = class extends CustomEvent<DetailGeneric> {
             static readonly type = type;
