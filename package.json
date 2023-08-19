@@ -39,30 +39,30 @@
         "test:types": "tsc --noEmit"
     },
     "dependencies": {
-        "@augment-vir/common": "^15.3.0"
+        "@augment-vir/common": "^16.4.0"
     },
     "devDependencies": {
         "@open-wc/testing": "3.2.0",
         "@types/mocha": "^10.0.1",
         "@web/dev-server-esbuild": "^0.4.1",
-        "@web/test-runner": "^0.16.1",
-        "@web/test-runner-commands": "^0.7.0",
+        "@web/test-runner": "^0.17.0",
+        "@web/test-runner-commands": "^0.8.0",
         "@web/test-runner-playwright": "^0.10.1",
-        "@web/test-runner-visual-regression": "^0.8.0",
-        "cspell": "^6.31.1",
-        "esbuild": "^0.18.11",
+        "@web/test-runner-visual-regression": "^0.8.2",
+        "cspell": "^7.0.0",
+        "esbuild": "^0.19.2",
         "istanbul-smart-text-reporter": "^1.1.2",
         "markdown-code-example-inserter": "^0.3.1",
-        "npm-check-updates": "^16.10.13",
+        "npm-check-updates": "^16.12.2",
         "prettier": "^2.8.8",
         "prettier-plugin-interpolated-html-tags": "^0.0.4",
         "prettier-plugin-jsdoc": "^0.4.2",
         "prettier-plugin-multiline-arrays": "^2.0.0",
-        "prettier-plugin-organize-imports": "^3.2.2",
-        "prettier-plugin-packagejson": "^2.4.3",
+        "prettier-plugin-organize-imports": "^3.2.3",
+        "prettier-plugin-packagejson": "^2.4.5",
         "prettier-plugin-sort-json": "^1.0.0",
         "prettier-plugin-toml": "^0.3.1",
-        "virmator": "6.6.6"
+        "virmator": "^7.3.1"
     },
     "overrides": {
         "semver": "^7.5.3"
