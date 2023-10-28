@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "1.4.1",
+    "version": "2.0.0",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
@@ -17,23 +17,24 @@
         "type": "git",
         "url": "https://github.com/electrovir/typed-event-target"
     },
-    "license": "MIT",
+    "license": "(MIT or CC0 1.0)",
     "author": {
         "name": "electrovir",
         "url": "https://github.com/electrovir"
     },
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
-    "types": "dist/types/index.d.ts",
+    "types": "dist/esm/index.d.ts",
     "scripts": {
-        "compile": "tsc --project tsconfig.json && tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
-        "docs:update": "virmator code-in-markdown --index src/index.ts README.md",
+        "compile": "tsc --project tsconfig.json && tsc --project tsconfig.cjs.json",
+        "docs:update": "virmator docs --index src/index.ts README.md",
         "format": "virmator format",
         "publish": "virmator publish \"npm run compile && npm run test:all\"",
         "test": "virmator test-web",
-        "test:all": "npm run test:types && npm run test:coverage && npm run test:spelling && npm run test:format && npm run test:docs",
+        "test:all": "concurrently --colors --kill-others-on-fail -c auto --names types,tests,spelling,format,docs,deps \"npm run test:types\" \"npm run test:coverage\" \"npm run test:spelling\" \"npm run test:format\" \"npm run test:docs\" \"npm run test:deps\"",
         "test:coverage": "npm run test coverage",
-        "test:docs": "virmator code-in-markdown check --index src/index.ts README.md",
+        "test:deps": "virmator deps check",
+        "test:docs": "virmator docs check --index src/index.ts README.md",
         "test:format": "virmator format check",
         "test:spelling": "virmator spellcheck",
         "test:types": "tsc --noEmit"
@@ -63,6 +64,7 @@
         "prettier-plugin-packagejson": "^2.4.6",
         "prettier-plugin-sort-json": "^3.1.0",
         "prettier-plugin-toml": "^1.0.0",
+        "typedoc": "^0.25.2",
         "virmator": "^11.1.0"
     },
     "overrides": {
