@@ -1,5 +1,7 @@
 **/*/readme-examples/
 **/*/test/
+*.book-helper.*
+*.book.*
 *.d.ts.map
 *.test-helper.*
 *.test.*
@@ -21,11 +23,3 @@ test-files/
 ts.out/
 tsconfig*.json
 tsconfig.tsbuildinfo
-
-*.test-helper.ts
-*.test.d.ts
-*.test.js
-*.test.ts
-coverage/
-graphics/
-src/
