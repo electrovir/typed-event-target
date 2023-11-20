@@ -27,7 +27,7 @@
     "types": "dist/esm/index.d.ts",
     "scripts": {
         "compile": "tsc --project tsconfig.json && tsc --project tsconfig.cjs.json",
-        "docs:update": "virmator docs --index src/index.ts README.md",
+        "docs": "virmator docs --index src/index.ts README.md",
         "format": "virmator format",
         "publish": "virmator publish \"npm run compile && npm run test:all\"",
         "test": "virmator test-web",
