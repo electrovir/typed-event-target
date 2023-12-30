@@ -23,3 +23,5 @@ test-files/
 ts.out/
 tsconfig*.json
 tsconfig.tsbuildinfo
+
+*.mock.ts

@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
@@ -40,7 +40,9 @@
         "test:types": "tsc --noEmit"
     },
     "dependencies": {
-        "@augment-vir/common": "^22.1.1"
+        "@augment-vir/common": "^22.1.1",
+        "run-time-assertions": "^0.2.1",
+        "type-fest": "^4.9.0"
     },
     "devDependencies": {
         "@open-wc/testing": "4.0.0",

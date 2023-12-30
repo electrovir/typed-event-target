@@ -9,9 +9,7 @@ export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarge
         : never;
 
 /** An EventTarget sub-class with typing for allowed events. */
-export class TypedEventTarget<
-    const PossibleEventsGeneric extends Readonly<Event>,
-> extends EventTarget {
+export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> extends EventTarget {
     private setupListeners: {
         type: string;
         callback: TypedEventListenerOrEventListenerObject<any>;
@@ -19,8 +17,8 @@ export class TypedEventTarget<
     }[] = [];
 
     /**
-     * Get a count of all currently listeners. If a listener is removed, it will no longer be
-     * counted.
+     * Get a count of all currently attached listeners. If a listener is removed, it will no longer
+     * be counted.
      */
     public getListenerCount(): number {
         return this.setupListeners.length;
@@ -30,12 +28,10 @@ export class TypedEventTarget<
      * Add an event listener. Has the same API as the built-in `EventTarget.addEventListener` method
      * but with added event types.
      */
-    override addEventListener<
-        const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
-    >(
-        type: EventNameGeneric,
+    override addEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
+        type: EventType,
         callback: TypedEventListenerOrEventListenerObject<
-            ExtractEventByType<PossibleEventsGeneric, EventNameGeneric>
+            ExtractEventByType<PossibleEvents, EventType>
         > | null,
         options?: boolean | AddEventListenerOptions | undefined,
     ): void {
@@ -49,8 +45,11 @@ export class TypedEventTarget<
         }
     }
 
-    /** Dispatch a typed event. Causes all attached listeners listening to this event to be fired. */
-    override dispatchEvent(event: PossibleEventsGeneric): boolean {
+    /**
+     * Dispatch a typed event. Has the same API as the built-in `EventTarget.dispatchEvent` method
+     * but with added event types.
+     */
+    override dispatchEvent(event: PossibleEvents): boolean {
         return super.dispatchEvent(event);
     }
 
@@ -58,12 +57,10 @@ export class TypedEventTarget<
      * Remove an already-added event listener. Has the same API as the built-in
      * `EventTarget.removeEventListener` method but with added event types.
      */
-    override removeEventListener<
-        const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
-    >(
-        type: EventNameGeneric,
+    override removeEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
+        type: EventType,
         callback: TypedEventListenerOrEventListenerObject<
-            ExtractEventByType<PossibleEventsGeneric, EventNameGeneric>
+            ExtractEventByType<PossibleEvents, EventType>
         > | null,
         options?: boolean | EventListenerOptions | undefined,
     ): void {
