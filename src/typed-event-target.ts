@@ -1,5 +1,11 @@
 import {filterOutIndexes} from '@augment-vir/common';
-import {ExtractEventByType, ExtractEventTypes} from './event-types';
+import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
+import {TypedEventListenerOrEventListenerObject} from './listener';
+
+export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarget<Event>> =
+    EventTargetGeneric extends TypedEventTarget<infer InferredEventTypeGeneric>
+        ? InferredEventTypeGeneric
+        : never;
 
 export class TypedEventTarget<
     const PossibleEventsGeneric extends Readonly<Event>,
@@ -98,19 +104,3 @@ export class TypedEventTarget<
         this.setupListeners = [];
     }
 }
-
-export interface TypedEventListener<EventGeneric extends Event> {
-    (event: EventGeneric): void;
-}
-export interface TypedEventListenerObject<EventGeneric extends Event> {
-    handleEvent(event: EventGeneric): void;
-}
-
-export type TypedEventListenerOrEventListenerObject<EventGeneric extends Event> =
-    | TypedEventListener<EventGeneric>
-    | TypedEventListenerObject<EventGeneric>;
-
-export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarget<Event>> =
-    EventTargetGeneric extends TypedEventTarget<infer InferredEventTypeGeneric>
-        ? InferredEventTypeGeneric
-        : never;

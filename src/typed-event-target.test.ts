@@ -1,12 +1,9 @@
 import {ArrayElement} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {Constructed} from './augments/constructor';
+import {TypedEventListener} from './listener';
 import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './test/test-events';
-import {
-    EventTypesFromEventTarget,
-    TypedEventListener,
-    TypedEventTarget,
-} from './typed-event-target';
+import {EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target';
 
 class ImplementedTypedEventTarget extends TypedEventTarget<SubEventHerp | SubEventDerp> {}
 

@@ -1,5 +1,5 @@
+import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from '../test/test-events';
 import {ExtractEventByType, ExtractEventTypes} from './event-types';
-import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './test/test-events';
 
 describe('ExtractEventByType', () => {
     it('should extract event types from a list of possible events', () => {

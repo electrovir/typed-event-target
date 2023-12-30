@@ -1,6 +1,6 @@
 import {assert} from '@open-wc/testing';
+import {TypedEventTarget} from '../typed-event-target';
 import {defineTypedCustomEvent} from './typed-custom-event';
-import {TypedEventTarget} from './typed-event-target';
 
 describe(defineTypedCustomEvent.name, () => {
     // the following it call is mostly copied from typed-events.ts

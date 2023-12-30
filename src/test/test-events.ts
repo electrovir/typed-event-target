@@ -1,6 +1,6 @@
 import {ArrayElement} from '@augment-vir/common';
 import {Constructed} from '../augments/constructor';
-import {defineTypedEvent} from '../typed-event';
+import {defineTypedEvent} from '../events/typed-event';
 
 export enum SubEventTypeEnum {
     Herp = 'herp',
