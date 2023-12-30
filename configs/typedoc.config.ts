@@ -12,5 +12,4 @@ export const typeDocConfig: Partial<TypeDocOptions> = {
         indexTsFile,
     ],
     intentionallyNotExported: [],
-    requiredToBeDocumented: [],
 };

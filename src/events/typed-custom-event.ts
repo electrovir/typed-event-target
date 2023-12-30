@@ -33,13 +33,18 @@ export type TypedCustomEventInit<EventDetail> = RequiredBy<CustomEventInit<Event
  * Define a `CustomEvent` sub-class with a type tied to its detail type and event type string. This
  * is the same as `defineTypedEvent` but with a detail property for storing arbitrary data.
  *
+ * This needs to be called twice in order to properly bind both the detail type generic and the
+ * event type string.
+ *
  * @example
  *     defineTypedCustomEvent<DetailType>()('event-type-string');
  */
 export function defineTypedCustomEvent<const EventDetail = undefined>() {
-    return <EventType extends string>(type: EventType) => {
+    /** Needs to be called with the type string in order to finalize the event definition setup. */
+    function defineEventTypeString<EventType extends string>(type: EventType) {
         const TypedEventConstructor = class extends customEventSuperClass<EventDetail> {
             static readonly type = type;
+
             constructor(eventInitDict: TypedCustomEventInit<EventDetail>) {
                 super(type, eventInitDict);
             }
@@ -49,5 +54,7 @@ export function defineTypedCustomEvent<const EventDetail = undefined>() {
             eventInitDict: TypedCustomEventInit<EventDetail>,
         ) => TypedCustomEvent<EventDetail, EventType>) &
             Overwrite<typeof Event, Pick<TypedCustomEvent<EventDetail, EventType>, 'type'>>;
-    };
+    }
+
+    return defineEventTypeString;
 }

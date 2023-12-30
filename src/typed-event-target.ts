@@ -2,11 +2,13 @@ import {filterOutIndexes} from '@augment-vir/common';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
 import {TypedEventListenerOrEventListenerObject} from './listener';
 
+/** Extract event types from an already-defined `TypedEventTarget` instance or sub-class. */
 export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarget<Event>> =
     EventTargetGeneric extends TypedEventTarget<infer InferredEventTypeGeneric>
         ? InferredEventTypeGeneric
         : never;
 
+/** An EventTarget sub-class with typing for allowed events. */
 export class TypedEventTarget<
     const PossibleEventsGeneric extends Readonly<Event>,
 > extends EventTarget {
@@ -16,10 +18,18 @@ export class TypedEventTarget<
         options: boolean | EventListenerOptions | undefined;
     }[] = [];
 
+    /**
+     * Get a count of all currently listeners. If a listener is removed, it will no longer be
+     * counted.
+     */
     public getListenerCount(): number {
         return this.setupListeners.length;
     }
 
+    /**
+     * Add an event listener. Has the same API as the built-in `EventTarget.addEventListener` method
+     * but with added event types.
+     */
     override addEventListener<
         const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
     >(
@@ -39,10 +49,15 @@ export class TypedEventTarget<
         }
     }
 
+    /** Dispatch a typed event. Causes all attached listeners listening to this event to be fired. */
     override dispatchEvent(event: PossibleEventsGeneric): boolean {
         return super.dispatchEvent(event);
     }
 
+    /**
+     * Remove an already-added event listener. Has the same API as the built-in
+     * `EventTarget.removeEventListener` method but with added event types.
+     */
     override removeEventListener<
         const EventNameGeneric extends ExtractEventTypes<PossibleEventsGeneric>,
     >(
@@ -93,6 +108,7 @@ export class TypedEventTarget<
         this.setupListeners = filterOutIndexes(this.setupListeners, [previouslyAddedListenerIndex]);
     }
 
+    /** Remove all currently attached event listeners. */
     public removeAllEventListeners(): void {
         this.setupListeners.forEach((listenerSetup) => {
             super.removeEventListener(
