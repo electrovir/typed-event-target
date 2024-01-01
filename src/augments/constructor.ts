@@ -3,5 +3,3 @@ export type Constructed<ConstructorFunction extends Readonly<new (...args: any[]
     ConstructorFunction extends new (...args: any[]) => infer ConstructorReturnType
         ? ConstructorReturnType
         : never;
-
-export type {Constructor} from 'type-fest';
