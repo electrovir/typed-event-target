@@ -23,7 +23,7 @@ describe(TypedListenTarget.name, () => {
         assert.strictEqual(removeListener(), true);
         assert.strictEqual(removeListener(), false);
         assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
-        assert.strictEqual(listenTargetInstance.removeListeners(), 0);
+        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
     });
 
     it('allows dispatching an event without listeners', () => {
@@ -38,12 +38,12 @@ describe(TypedListenTarget.name, () => {
     it('removes all listeners', () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
-        assert.strictEqual(listenTargetInstance.removeListeners(), 0);
+        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
         const removeListener = listenTargetInstance.listen(TestEvent.type, () => {});
 
-        assert.strictEqual(listenTargetInstance.removeListeners(), 1);
+        assert.strictEqual(listenTargetInstance.removeAllListeners(), 1);
         assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
-        assert.strictEqual(listenTargetInstance.removeListeners(), 0);
+        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
         assert.strictEqual(removeListener(), false);
     });
 
@@ -52,7 +52,7 @@ describe(TypedListenTarget.name, () => {
 
         let callCount = 0;
 
-        assert.strictEqual(listenTargetInstance.removeListeners(), 0);
+        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
         listenTargetInstance.listen(TestEvent.type, (event, removeSelf) => {
             callCount++;
             removeSelf();

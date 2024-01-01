@@ -130,7 +130,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      *
      * @returns The number of listeners that were removed.
      */
-    public removeListeners(): number {
+    public removeAllListeners(): number {
         const listenerSets = getObjectTypedValues(this.listeners);
         const totalRemoved = listenerSets.reduce((accum, listenerSet) => {
             const size = listenerSet?.size || 0;
