@@ -1,7 +1,5 @@
 import {PartialAndUndefined, getObjectTypedValues} from '@augment-vir/common';
 import {isRunTimeType} from 'run-time-assertions';
-import {Constructor} from 'type-fest';
-import {Constructed} from './augments/constructor';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
 import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener';
 
@@ -44,9 +42,13 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      *
      * @returns A callback to remove the listener.
      */
-    public listen<const EventDefinition extends Constructor<PossibleEvents>>(
+    public listen<
+        const EventDefinition extends Readonly<{type: ExtractEventTypes<PossibleEvents>}>,
+    >(
         eventDefinition: EventDefinition,
-        listenerCallback: TypedEventListenerWithRemoval<Constructed<EventDefinition>>,
+        listenerCallback: TypedEventListenerWithRemoval<
+            ExtractEventByType<PossibleEvents, EventDefinition['type']>
+        >,
         options?: ListenOptions | undefined,
     ): RemoveListenerCallback;
     /**

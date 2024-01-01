@@ -101,6 +101,20 @@ describe(TypedListenTarget.name, () => {
         assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
     });
 
+    it('listens to an event with type parameters', async () => {
+        class SubEvent<
+            TypeParam extends Record<PropertyKey, any> = {},
+        > extends defineTypedCustomEvent<unknown>()('sub-event') {
+            public declare detail: TypeParam;
+        }
+
+        const listenTargetInstance = new TypedListenTarget<TestEvent | SubEvent<{value: string}>>();
+
+        listenTargetInstance.listen(SubEvent, (event) => {
+            assertTypeOf(event.detail).toEqualTypeOf<{value: string}>();
+        });
+    });
+
     it('listens by the event definition or type', async () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
