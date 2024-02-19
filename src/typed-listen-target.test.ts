@@ -1,4 +1,4 @@
-import {waitForCondition} from '@augment-vir/common';
+import {waitUntilTruthy} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {assertTypeOf} from 'run-time-assertions';
 import {defineTypedCustomEvent} from './events/typed-custom-event';
@@ -63,10 +63,8 @@ describe(TypedListenTarget.name, () => {
             1,
         );
 
-        await waitForCondition({
-            conditionCallback() {
-                return callCount >= 1;
-            },
+        await waitUntilTruthy(() => {
+            return callCount >= 1;
         });
 
         assert.strictEqual(callCount, 1);
@@ -91,10 +89,8 @@ describe(TypedListenTarget.name, () => {
             1,
         );
 
-        await waitForCondition({
-            conditionCallback() {
-                return callCount >= 1;
-            },
+        await waitUntilTruthy(() => {
+            return callCount >= 1;
         });
 
         assert.strictEqual(callCount, 1);
@@ -142,10 +138,8 @@ describe(TypedListenTarget.name, () => {
             2,
         );
 
-        await waitForCondition({
-            conditionCallback() {
-                return callCount >= 6;
-            },
+        await waitUntilTruthy(() => {
+            return callCount >= 6;
         });
 
         assert.strictEqual(callCount, 6);
