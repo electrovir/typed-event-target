@@ -30,7 +30,7 @@ describe(TypedListenTarget.name, () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             0,
         );
     });
@@ -59,7 +59,7 @@ describe(TypedListenTarget.name, () => {
         });
         assert.strictEqual(listenTargetInstance.getListenerCount(), 1);
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             1,
         );
 
@@ -85,7 +85,7 @@ describe(TypedListenTarget.name, () => {
         );
 
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             1,
         );
 
@@ -126,15 +126,15 @@ describe(TypedListenTarget.name, () => {
         });
 
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
         assert.strictEqual(
-            listenTargetInstance.dispatchEvent(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
 

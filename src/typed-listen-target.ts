@@ -106,7 +106,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      *
      * @returns The number of listeners that were fired.
      */
-    public dispatchEvent(event: PossibleEvents): number {
+    public dispatch(event: PossibleEvents): number {
         const listenerSet = this.listeners[event.type as ExtractEventTypes<PossibleEvents>];
 
         /**
