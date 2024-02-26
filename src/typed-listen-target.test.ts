@@ -2,7 +2,7 @@ import {waitUntilTruthy} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {assertTypeOf} from 'run-time-assertions';
 import {defineTypedCustomEvent} from './events/typed-custom-event';
-import {TypedListenTarget} from './typed-listen-target';
+import {ListenTarget, TypedListenTarget} from './typed-listen-target';
 
 export class TestEvent extends defineTypedCustomEvent<{myData: string}>()('test-event') {}
 
@@ -150,6 +150,26 @@ describe(TypedListenTarget.name, () => {
         instance.listen(TestEvent, (event) => {});
         assert.strictEqual(instance.getListenerCount(), 1);
         instance.destroy();
+        assert.strictEqual(instance.getListenerCount(), 0);
+    });
+});
+
+describe(ListenTarget.name, () => {
+    it('is the same as TypedListenTarget', () => {
+        const instance = new ListenTarget<TestEvent>();
+
+        const events: TestEvent[] = [];
+
+        instance.listen(TestEvent, (event) => {
+            events.push(event);
+        });
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+
+        assert.lengthOf(events, 1);
+
+        instance.destroy();
+
         assert.strictEqual(instance.getListenerCount(), 0);
     });
 });

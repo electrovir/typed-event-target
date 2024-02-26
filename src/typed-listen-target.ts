@@ -149,3 +149,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         this.removeAllListeners();
     }
 }
+
+export class ListenTarget<
+    const PossibleEvents extends Readonly<Event> = never,
+> extends TypedListenTarget<PossibleEvents> {}
