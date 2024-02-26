@@ -147,10 +147,86 @@ describe(TypedListenTarget.name, () => {
 
     it('destroys itself', () => {
         const instance = new TypedListenTarget<TestEvent>();
-        instance.listen(TestEvent, (event) => {});
+
+        const events: TestEvent[] = [];
+
+        instance.listen(TestEvent, (event) => {
+            events.push(event);
+        });
         assert.strictEqual(instance.getListenerCount(), 1);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
+
         instance.destroy();
         assert.strictEqual(instance.getListenerCount(), 0);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
+    });
+
+    it('removes a listener with removeListener and event input', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        const events: TestEvent[] = [];
+
+        function listener(event: TestEvent) {
+            events.push(event);
+        }
+
+        instance.listen(TestEvent, listener);
+        assert.strictEqual(instance.getListenerCount(), 1);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
+
+        assert.isTrue(instance.removeListener(TestEvent, listener));
+        assert.strictEqual(instance.getListenerCount(), 0);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
+    });
+
+    it('does not remove a listener with removeListener if none attached', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.isFalse(instance.removeListener(TestEvent, () => {}));
+        assert.strictEqual(instance.getListenerCount(), 0);
+    });
+
+    it('does not remove a listener with removeListener if already removed', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        function listener() {}
+
+        instance.listen(TestEvent, listener);
+        assert.isTrue(instance.removeListener(TestEvent, listener));
+        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.isFalse(instance.removeListener(TestEvent, listener));
+        assert.strictEqual(instance.getListenerCount(), 0);
+    });
+
+    it('removes a listener with removeListener and event type input', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        const events: TestEvent[] = [];
+
+        function listener(event: TestEvent) {
+            events.push(event);
+        }
+
+        instance.listen(TestEvent, listener);
+        assert.strictEqual(instance.getListenerCount(), 1);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
+
+        assert.isTrue(instance.removeListener(TestEvent.type, listener));
+        assert.strictEqual(instance.getListenerCount(), 0);
+
+        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        assert.lengthOf(events, 1);
     });
 });
 

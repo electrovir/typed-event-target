@@ -21,8 +21,14 @@ export type ListenOptions = PartialAndUndefined<{
  */
 export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = never> {
     protected listeners: Partial<{
-        [EventType in ExtractEventTypes<PossibleEvents>]: Set<
-            TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>
+        [EventType in ExtractEventTypes<PossibleEvents>]: Map<
+            TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>,
+            {
+                listener: TypedEventListenerWithRemoval<
+                    ExtractEventByType<PossibleEvents, EventType>
+                >;
+                removeListener: RemoveListenerCallback;
+            }
         >;
     }> = {};
 
@@ -83,7 +89,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
             : eventTypeOrConstructor.type;
 
         function removeListener(): boolean {
-            return listeners[eventType]?.delete(wrappedCallback) || false;
+            return listeners[eventType]?.delete(listenerCallback) || false;
         }
 
         function wrappedCallback(event: PossibleEvents, removeSelf: RemoveListenerCallback) {
@@ -94,11 +100,54 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         }
 
         if (!listeners[eventType]) {
-            listeners[eventType] = new Set();
+            listeners[eventType] = new Map();
         }
-        listeners[eventType]!.add(wrappedCallback);
+        listeners[eventType]!.set(listenerCallback, {listener: wrappedCallback, removeListener});
 
         return removeListener;
+    }
+
+    /** Removes a listener. */
+    public removeListener<
+        const EventDefinition extends Readonly<{type: ExtractEventTypes<PossibleEvents>}>,
+    >(
+        eventDefinition: EventDefinition,
+        listenerCallback: TypedEventListenerWithRemoval<
+            ExtractEventByType<PossibleEvents, EventDefinition['type']>
+        >,
+    ): boolean;
+    /** Removes a listener. */
+    public removeListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
+        eventType: EventType,
+        listenerCallback: TypedEventListenerWithRemoval<
+            ExtractEventByType<PossibleEvents, EventType>
+        >,
+    ): boolean;
+    /** Removes a listener. */
+    public removeListener(
+        eventTypeOrConstructor: string | {type: string},
+        listenerCallback: TypedEventListenerWithRemoval<any>,
+    ): boolean {
+        const eventType: ExtractEventTypes<PossibleEvents> = isRunTimeType(
+            eventTypeOrConstructor,
+            'string',
+        )
+            ? eventTypeOrConstructor
+            : eventTypeOrConstructor.type;
+
+        const eventTypeListeners = this.listeners[eventType];
+
+        if (!eventTypeListeners) {
+            return false;
+        }
+
+        const attachedListenerWrapper = eventTypeListeners.get(listenerCallback);
+
+        if (!attachedListenerWrapper) {
+            return false;
+        }
+
+        return attachedListenerWrapper.removeListener();
     }
 
     /**
@@ -115,12 +164,10 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
          */
         const size: number = listenerSet?.size || 0;
 
-        listenerSet?.forEach((listenerCallback) => {
-            listenerCallback(
+        listenerSet?.forEach((listenerWrapper) => {
+            listenerWrapper.listener(
                 event as ExtractEventByType<PossibleEvents, ExtractEventTypes<PossibleEvents>>,
-                () => {
-                    return listenerSet.delete(listenerCallback);
-                },
+                listenerWrapper.removeListener,
             );
         });
 
