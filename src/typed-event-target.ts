@@ -10,7 +10,7 @@ export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarge
 
 /** An EventTarget sub-class with typing for allowed events. */
 export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> extends EventTarget {
-    private setupListeners: {
+    protected setupListeners: {
         type: string;
         callback: TypedEventListenerOrEventListenerObject<any>;
         options: boolean | EventListenerOptions | undefined;
@@ -28,7 +28,7 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
      * Add an event listener. Has the same API as the built-in `EventTarget.addEventListener` method
      * but with added event types.
      */
-    override addEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
+    public override addEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
         type: EventType,
         callback: TypedEventListenerOrEventListenerObject<
             ExtractEventByType<PossibleEvents, EventType>
@@ -49,7 +49,7 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
      * Dispatch a typed event. Has the same API as the built-in `EventTarget.dispatchEvent` method
      * but with added event types.
      */
-    override dispatchEvent(event: PossibleEvents): boolean {
+    public override dispatchEvent(event: PossibleEvents): boolean {
         return super.dispatchEvent(event);
     }
 
@@ -57,7 +57,7 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
      * Remove an already-added event listener. Has the same API as the built-in
      * `EventTarget.removeEventListener` method but with added event types.
      */
-    override removeEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
+    public override removeEventListener<const EventType extends ExtractEventTypes<PossibleEvents>>(
         type: EventType,
         callback: TypedEventListenerOrEventListenerObject<
             ExtractEventByType<PossibleEvents, EventType>
@@ -115,5 +115,10 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
             );
         });
         this.setupListeners = [];
+    }
+
+    /** Remove all internal state to free up resources. */
+    public destroy(): void {
+        this.removeAllEventListeners();
     }
 }

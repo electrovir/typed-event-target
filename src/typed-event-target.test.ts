@@ -291,6 +291,14 @@ describe(TypedEventTarget.constructor.name, () => {
             target.removeAllEventListeners();
         });
     });
+
+    it('destroys itself', () => {
+        const instance = new TypedEventTarget<SubEventDerp>();
+        instance.addEventListener(SubEventTypeEnum.Derp, () => {});
+        assert.strictEqual(instance.getListenerCount(), 1);
+        instance.destroy();
+        assert.strictEqual(instance.getListenerCount(), 0);
+    });
 });
 
 describe('EventTypesFromEventTarget', () => {

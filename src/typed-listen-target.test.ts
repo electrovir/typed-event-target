@@ -144,4 +144,12 @@ describe(TypedListenTarget.name, () => {
 
         assert.strictEqual(callCount, 6);
     });
+
+    it('destroys itself', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+        instance.listen(TestEvent, (event) => {});
+        assert.strictEqual(instance.getListenerCount(), 1);
+        instance.destroy();
+        assert.strictEqual(instance.getListenerCount(), 0);
+    });
 });

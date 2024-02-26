@@ -20,7 +20,7 @@ export type ListenOptions = PartialAndUndefined<{
  * `removeEventListener` method.
  */
 export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = never> {
-    private listeners: Partial<{
+    protected listeners: Partial<{
         [EventType in ExtractEventTypes<PossibleEvents>]: Set<
             TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>
         >;
@@ -69,7 +69,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      *
      * @returns A callback to remove the listener.
      */
-    listen(
+    public listen(
         eventTypeOrConstructor: string | {type: string},
         listenerCallback: TypedEventListenerWithRemoval<any>,
         options: ListenOptions | undefined = {},
@@ -142,5 +142,10 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         this.listeners = {};
 
         return totalRemoved;
+    }
+
+    /** Remove all internal state to free up resources. */
+    public destroy(): void {
+        this.removeAllListeners();
     }
 }
