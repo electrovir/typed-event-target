@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
@@ -44,6 +44,7 @@
         "run-time-assertions": "^1.1.0"
     },
     "devDependencies": {
+        "@augment-vir/browser-testing": "^26.3.2",
         "@open-wc/testing": "4.0.0",
         "@types/mocha": "^10.0.6",
         "@web/dev-server-esbuild": "^1.0.2",

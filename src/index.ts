@@ -4,3 +4,4 @@ export * from './events/typed-event';
 export * from './listener';
 export * from './typed-event-target';
 export * from './typed-listen-target';
+export * from './util/listen-to';
