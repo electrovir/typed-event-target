@@ -20,13 +20,19 @@ const customEventSuperClass = globalThis.CustomEvent || createPolyfill();
 /**
  * Sub-class of `CustomEvent` with the detail type and event type string both being part of its type
  * signature.
+ *
+ * @category Types
  */
 export interface TypedCustomEvent<EventDetail, EventType extends string>
     extends CustomEvent<EventDetail> {
     readonly type: EventType;
 }
 
-/** Init input for TypedCustomEvent instances. */
+/**
+ * Init input for TypedCustomEvent instances.
+ *
+ * @category Types
+ */
 export type TypedCustomEventInit<EventDetail> = RequiredBy<CustomEventInit<EventDetail>, 'detail'>;
 
 /**
@@ -36,6 +42,7 @@ export type TypedCustomEventInit<EventDetail> = RequiredBy<CustomEventInit<Event
  * This needs to be called twice in order to properly bind both the detail type generic and the
  * event type string.
  *
+ * @category Events
  * @example
  *     defineTypedCustomEvent<DetailType>()('event-type-string');
  */

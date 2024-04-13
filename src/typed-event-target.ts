@@ -2,13 +2,21 @@ import {filterOutIndexes} from '@augment-vir/common';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
 import {TypedEventListenerOrEventListenerObject} from './listener';
 
-/** Extract event types from an already-defined `TypedEventTarget` instance or sub-class. */
+/**
+ * Extract event types from an already-defined `TypedEventTarget` instance or sub-class.
+ *
+ * @category Types
+ */
 export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarget<Event>> =
     EventTargetGeneric extends TypedEventTarget<infer InferredEventTypeGeneric>
         ? InferredEventTypeGeneric
         : never;
 
-/** An EventTarget sub-class with typing for allowed events. */
+/**
+ * An EventTarget sub-class with typing for allowed events.
+ *
+ * @category Main
+ */
 export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> extends EventTarget {
     protected setupListeners: {
         type: string;

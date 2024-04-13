@@ -1,4 +1,3 @@
-export * from './augments/constructor';
 export * from './events/event-types';
 export * from './events/typed-custom-event';
 export * from './events/typed-event';

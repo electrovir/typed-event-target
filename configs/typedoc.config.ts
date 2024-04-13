@@ -12,4 +12,14 @@ export const typeDocConfig: Partial<TypeDocOptions> = {
         indexTsFile,
     ],
     intentionallyNotExported: [],
+    navigation: {
+        includeCategories: true,
+    },
+    categoryOrder: [
+        'Main',
+        'Events',
+        'Util',
+        'Types',
+        'Other',
+    ],
 };

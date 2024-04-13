@@ -1,6 +1,10 @@
 import {Overwrite} from '@augment-vir/common';
 
-/** Sub-class of `Event` with the type string part of the type signature. */
+/**
+ * Sub-class of `Event` with the type string part of the type signature.
+ *
+ * @category Types
+ */
 export interface TypedEvent<EventType extends string> extends Event {
     readonly type: EventType;
 }
@@ -8,6 +12,7 @@ export interface TypedEvent<EventType extends string> extends Event {
 /**
  * Define an `Event` sub-class with a type tied to its event type string.
  *
+ * @category Events
  * @example
  *     defineTypedEvent('event-type-string');
  */

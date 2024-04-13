@@ -1,5 +1,4 @@
 import {ArrayElement} from '@augment-vir/common';
-import {Constructed} from '../augments/constructor';
 import {defineTypedEvent} from './typed-event';
 
 export enum SubEventTypeEnum {
@@ -15,4 +14,4 @@ export const possibleEvents = [
     SubEventDerp,
 ];
 
-export type PossibleEvent = Constructed<ArrayElement<typeof possibleEvents>>;
+export type PossibleEvent = InstanceType<ArrayElement<typeof possibleEvents>>;

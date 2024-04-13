@@ -1,6 +1,5 @@
 import {ArrayElement} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
-import {Constructed} from './augments/constructor';
 import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events/events.mock';
 import {TypedEventListener} from './listener';
 import {EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target';
@@ -13,7 +12,7 @@ describe(TypedEventTarget.constructor.name, () => {
             SubEventHerp,
             SubEventDerp,
         ];
-        type PossibleEvent = Constructed<ArrayElement<typeof possibleEvents>>;
+        type PossibleEvent = InstanceType<ArrayElement<typeof possibleEvents>>;
 
         class OtherImplementation extends TypedEventTarget<PossibleEvent> {}
 

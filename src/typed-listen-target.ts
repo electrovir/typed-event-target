@@ -3,13 +3,21 @@ import {isRunTimeType} from 'run-time-assertions';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
 import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener';
 
-/** Extract event types from an already-defined `TypedListenTarget` instance or sub-class. */
+/**
+ * Extract event types from an already-defined `TypedListenTarget` instance or sub-class.
+ *
+ * @category Types
+ */
 export type EventTypesFromListenTarget<EventTargetGeneric extends TypedListenTarget<Event>> =
     EventTargetGeneric extends TypedListenTarget<infer InferredEventTypeGeneric>
         ? InferredEventTypeGeneric
         : never;
 
-/** Optional options for `TypedListenTarget.listen`. */
+/**
+ * Optional options for `TypedListenTarget.listen`.
+ *
+ * @category Types
+ */
 export type ListenOptions = PartialAndUndefined<{
     once: boolean;
 }>;
@@ -18,6 +26,8 @@ export type ListenOptions = PartialAndUndefined<{
  * Similar to `TypedEventTarget` except that it uses a `listen` method to add listeners and that
  * method returns a callback to remove the attached listener rather than having a
  * `removeEventListener` method.
+ *
+ * @category Main
  */
 export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = never> {
     protected listeners: Partial<{
@@ -197,6 +207,11 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
     }
 }
 
+/**
+ * An alias for `TypedListenTarget`.
+ *
+ * @category Main
+ */
 export class ListenTarget<
     const PossibleEvents extends Readonly<Event> = never,
 > extends TypedListenTarget<PossibleEvents> {}
