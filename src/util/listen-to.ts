@@ -4,7 +4,7 @@ import {MaybePromise} from '@augment-vir/common';
  * Call `addEventListener` on the given `EventTarget` instance and return a callback that removes
  * that listener.
  *
- * @category Util
+ * @category Listen
  */
 export function listenTo<Target extends EventTarget>(
     target: Target,
@@ -19,7 +19,11 @@ export function listenTo<Target extends EventTarget>(
     };
 }
 
-/** A wrapper for `globalThis.addEventListener` */
+/**
+ * A wrapper for `globalThis.addEventListener`
+ *
+ * @category Listen
+ */
 export function listenToGlobal<K extends keyof WindowEventMap>(
     type: K,
     listener: (this: typeof globalThis, event: WindowEventMap[K]) => MaybePromise<void>,

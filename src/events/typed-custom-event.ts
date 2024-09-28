@@ -1,21 +1,4 @@
-import {Overwrite, RequiredBy} from '@augment-vir/common';
-
-/**
- * Account for some browsers not implementing the `CustomEvent` global class. It's simple, so this
- * is just a quick polyfill for it.
- */
-/* c8 ignore next 12 */ // Can't test this without running another test runner.
-function createPolyfill() {
-    return class CustomEvent<T> extends Event {
-        detail: T;
-        constructor(message: string, data: EventInit & {detail: T}) {
-            super(message, data);
-            this.detail = data.detail;
-        }
-    };
-}
-
-const customEventSuperClass = globalThis.CustomEvent || createPolyfill();
+import {Overwrite, type SetRequired} from '@augment-vir/common';
 
 /**
  * Sub-class of `CustomEvent` with the detail type and event type string both being part of its type
@@ -33,7 +16,7 @@ export interface TypedCustomEvent<EventDetail, EventType extends string>
  *
  * @category Types
  */
-export type TypedCustomEventInit<EventDetail> = RequiredBy<CustomEventInit<EventDetail>, 'detail'>;
+export type TypedCustomEventInit<EventDetail> = SetRequired<CustomEventInit<EventDetail>, 'detail'>;
 
 /**
  * Define a `CustomEvent` sub-class with a type tied to its detail type and event type string. This
@@ -43,13 +26,12 @@ export type TypedCustomEventInit<EventDetail> = RequiredBy<CustomEventInit<Event
  * event type string.
  *
  * @category Events
- * @example
- *     defineTypedCustomEvent<DetailType>()('event-type-string');
+ * @example DefineTypedCustomEvent<DetailType>()('event-type-string');
  */
 export function defineTypedCustomEvent<const EventDetail = undefined>() {
     /** Needs to be called with the type string in order to finalize the event definition setup. */
     function defineEventTypeString<EventType extends string>(type: EventType) {
-        const TypedEventConstructor = class extends customEventSuperClass<EventDetail> {
+        const TypedEventConstructor = class extends CustomEvent<EventDetail> {
             static readonly type = type;
 
             constructor(eventInitDict: TypedCustomEventInit<EventDetail>) {

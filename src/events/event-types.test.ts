@@ -1,11 +1,11 @@
-import {ExtractEventByType, ExtractEventTypes} from './event-types';
-import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock';
+import {describe, it} from '@augment-vir/test';
+import {ExtractEventByType, ExtractEventTypes} from './event-types.js';
+import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock.js';
 
 describe('ExtractEventByType', () => {
     it('should extract event types from a list of possible events', () => {
         const validEvent: PossibleEvent = new SubEventDerp();
-        // PossibleEvent can't accept other Event constructors
-        // @ts-expect-error
+        // @ts-expect-error: PossibleEvent can't accept other Event constructors
         const invalidEvent: PossibleEvent = new Event('word');
     });
 
@@ -13,7 +13,7 @@ describe('ExtractEventByType', () => {
         type NarrowedType = ExtractEventByType<PossibleEvent, typeof SubEventTypeEnum.Derp>;
 
         const validInstance: NarrowedType = new SubEventDerp();
-        // @ts-expect-error
+        // @ts-expect-error: SubEventHerp should not be SubEventDerp
         const invalidInstance: NarrowedType = new SubEventHerp();
     });
 
@@ -26,11 +26,11 @@ describe('ExtractEventTypes', () => {
 
         const validType1: PossibleEventTypes = SubEventTypeEnum.Derp;
         const validType2: PossibleEventTypes = SubEventTypeEnum.Herp;
-        // @ts-expect-error
+        // @ts-expect-error: mismatched strings
         const invalidType1: PossibleEventTypes = '';
-        // @ts-expect-error
+        // @ts-expect-error: mismatched strings
         const invalidType2: PossibleEventTypes = 'derp';
-        // @ts-expect-error
+        // @ts-expect-error: mismatched strings
         const invalidType3: PossibleEventTypes = 'whatever';
     });
 });

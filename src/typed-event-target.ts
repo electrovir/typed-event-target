@@ -1,6 +1,6 @@
 import {filterOutIndexes} from '@augment-vir/common';
-import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
-import {TypedEventListenerOrEventListenerObject} from './listener';
+import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
+import {TypedEventListenerOrEventListenerObject} from './listener.js';
 
 /**
  * Extract event types from an already-defined `TypedEventTarget` instance or sub-class.
@@ -89,25 +89,18 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
                 }
 
                 if (
-                    typeof listener.options === 'boolean' &&
-                    typeof options === 'boolean' &&
-                    options !== listener.options
-                ) {
-                    return false;
-                } else if (
-                    typeof listener.options === 'object' &&
-                    typeof options === 'object' &&
-                    options.capture !== listener.options.capture
+                    (typeof listener.options === 'boolean' &&
+                        typeof options === 'boolean' &&
+                        options !== listener.options) ||
+                    (typeof listener.options === 'object' &&
+                        typeof options === 'object' &&
+                        options.capture !== listener.options.capture)
                 ) {
                     return false;
                 }
             }
 
-            if (listener.callback !== callback) {
-                return false;
-            }
-
-            return true;
+            return listener.callback === callback;
         });
 
         this.setupListeners = filterOutIndexes(this.setupListeners, [previouslyAddedListenerIndex]);

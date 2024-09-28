@@ -1,5 +1,6 @@
-import {assert} from '@open-wc/testing';
-import {defineTypedEvent} from './typed-event';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {defineTypedEvent} from './typed-event.js';
 
 describe(defineTypedEvent.name, () => {
     it('should produce the correct types', () => {
@@ -7,20 +8,20 @@ describe(defineTypedEvent.name, () => {
         const instance = new thing();
         const derpString: 'derp' = instance.type;
         const derpString2: 'derp' = thing.type;
-        // @ts-expect-error
+        // @ts-expect-error: wrong string assignment
         const invalidDerpString: 'derp' = 'what' as string;
-        // @ts-expect-error
+        // @ts-expect-error: Event type is not typed
         const invalidDerpString2: 'derp' = new Event('derp').type;
 
         const derpTypedEvent = defineTypedEvent('derp');
-        class stuff extends derpTypedEvent {}
+        class Stuff extends derpTypedEvent {}
 
-        const stuffInstance = new stuff();
+        const stuffInstance = new Stuff();
 
-        assert.instanceOf(stuffInstance, stuff);
+        assert.instanceOf(stuffInstance, Stuff);
         assert.instanceOf(stuffInstance, derpTypedEvent);
-        assert.strictEqual(thing.type, 'derp');
-        assert.strictEqual(instance.type, 'derp');
-        assert.strictEqual(derpTypedEvent.type, 'derp');
+        assert.strictEquals(thing.type, 'derp');
+        assert.strictEquals(instance.type, 'derp');
+        assert.strictEquals(derpTypedEvent.type, 'derp');
     });
 });

@@ -1,4 +1,4 @@
-import {TypedEventTarget} from '..';
-import {MyEvent1, MyEvent2} from './typed-events.example';
+import {TypedEventTarget} from '../index.js';
+import {MyEvent1, MyEvent2} from './typed-events.example.js';
 
 export const nowWithTypes = new EventTarget() as TypedEventTarget<MyEvent1 | MyEvent2>;

@@ -1,51 +1,51 @@
-import {clickElement} from '@augment-vir/browser-testing';
-import {wait, waitUntilTruthy} from '@augment-vir/common';
-import {assert, fixture, html} from '@open-wc/testing';
-import {assertInstanceOf} from 'run-time-assertions';
-import {listenTo, listenToGlobal} from './listen-to';
+import {assert, waitUntil} from '@augment-vir/assert';
+import {wait} from '@augment-vir/common';
+import {describe, it, testWeb} from '@augment-vir/test';
+import {html} from 'element-vir';
+import {listenTo, listenToGlobal} from './listen-to.js';
 
 describe(listenTo.name, () => {
     it('works', async () => {
-        const instance = await fixture(html`
+        const instance = await testWeb.render(html`
             <div>Hello There</div>
         `);
 
-        assertInstanceOf(instance, HTMLDivElement);
+        assert.instanceOf(instance, HTMLDivElement);
 
         const events: Event[] = [];
         const remover = listenTo(instance, 'click', (event) => {
             events.push(event);
         });
 
-        await clickElement(instance);
-        await waitUntilTruthy(() => events.length === 1);
+        await testWeb.click(instance);
+        await waitUntil.isTruthy(() => events.length === 1);
 
         remover();
-        await clickElement(instance);
-        await wait(1000);
-        assert.lengthOf(events, 1);
+        await testWeb.click(instance);
+        await wait({seconds: 1});
+        assert.isLengthExactly(events, 1);
     });
 });
 
 describe(listenToGlobal.name, () => {
     it('works', async () => {
-        const instance = await fixture(html`
+        const instance = await testWeb.render(html`
             <div>Hello There</div>
         `);
 
-        assertInstanceOf(instance, HTMLDivElement);
+        assert.instanceOf(instance, HTMLDivElement);
 
         const events: Event[] = [];
         const remover = listenToGlobal('click', (event) => {
             events.push(event);
         });
 
-        await clickElement(instance);
-        await waitUntilTruthy(() => events.length === 1);
+        await testWeb.click(instance);
+        await waitUntil.isTruthy(() => events.length === 1);
 
         remover();
-        await clickElement(instance);
-        await wait(1000);
-        assert.lengthOf(events, 1);
+        await testWeb.click(instance);
+        await wait({seconds: 1});
+        assert.isLengthExactly(events, 1);
     });
 });

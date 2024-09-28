@@ -1,7 +1,7 @@
-import {PartialAndUndefined, getObjectTypedValues} from '@augment-vir/common';
-import {isRunTimeType} from 'run-time-assertions';
-import {ExtractEventByType, ExtractEventTypes} from './events/event-types';
-import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener';
+import {check} from '@augment-vir/assert';
+import {PartialWithUndefined, getObjectTypedValues, getOrSet} from '@augment-vir/common';
+import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
+import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener.js';
 
 /**
  * Extract event types from an already-defined `TypedListenTarget` instance or sub-class.
@@ -18,8 +18,18 @@ export type EventTypesFromListenTarget<EventTargetGeneric extends TypedListenTar
  *
  * @category Types
  */
-export type ListenOptions = PartialAndUndefined<{
+export type ListenOptions = PartialWithUndefined<{
     once: boolean;
+}>;
+
+type Listeners<PossibleEvents extends Readonly<Event>> = Partial<{
+    [EventType in ExtractEventTypes<PossibleEvents>]: Map<
+        TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>,
+        {
+            listener: TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>;
+            removeListener: RemoveListenerCallback;
+        }
+    >;
 }>;
 
 /**
@@ -30,25 +40,15 @@ export type ListenOptions = PartialAndUndefined<{
  * @category Main
  */
 export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = never> {
-    protected listeners: Partial<{
-        [EventType in ExtractEventTypes<PossibleEvents>]: Map<
-            TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>,
-            {
-                listener: TypedEventListenerWithRemoval<
-                    ExtractEventByType<PossibleEvents, EventType>
-                >;
-                removeListener: RemoveListenerCallback;
-            }
-        >;
-    }> = {};
+    protected listeners: Listeners<PossibleEvents> = {};
 
     /**
      * Get a count of all currently attached listeners. If a listener is removed, it will no longer
      * be counted.
      */
     public getListenerCount(): number {
-        const counts = getObjectTypedValues(this.listeners).map(
-            (listenersEntry) => listenersEntry?.size || 0,
+        const counts = getObjectTypedValues(this.listeners as Listeners<any>).map(
+            (listenersEntry) => listenersEntry.size || 0,
         );
         return counts.reduce((accum, current) => accum + current, 0);
     }
@@ -91,10 +91,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         options: ListenOptions | undefined = {},
     ): RemoveListenerCallback {
         const listeners = this.listeners;
-        const eventType: ExtractEventTypes<PossibleEvents> = isRunTimeType(
-            eventTypeOrConstructor,
-            'string',
-        )
+        const eventType: ExtractEventTypes<PossibleEvents> = check.isString(eventTypeOrConstructor)
             ? eventTypeOrConstructor
             : eventTypeOrConstructor.type;
 
@@ -109,10 +106,11 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
             listenerCallback(event, removeSelf);
         }
 
-        if (!listeners[eventType]) {
-            listeners[eventType] = new Map();
-        }
-        listeners[eventType]!.set(listenerCallback, {listener: wrappedCallback, removeListener});
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        getOrSet(listeners, eventType, () => new Map())!.set(listenerCallback, {
+            listener: wrappedCallback,
+            removeListener,
+        });
 
         return removeListener;
     }
@@ -138,10 +136,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         eventTypeOrConstructor: string | {type: string},
         listenerCallback: TypedEventListenerWithRemoval<any>,
     ): boolean {
-        const eventType: ExtractEventTypes<PossibleEvents> = isRunTimeType(
-            eventTypeOrConstructor,
-            'string',
-        )
+        const eventType: ExtractEventTypes<PossibleEvents> = check.isString(eventTypeOrConstructor)
             ? eventTypeOrConstructor
             : eventTypeOrConstructor.type;
 
@@ -190,10 +185,10 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      * @returns The number of listeners that were removed.
      */
     public removeAllListeners(): number {
-        const listenerSets = getObjectTypedValues(this.listeners);
+        const listenerSets = getObjectTypedValues(this.listeners as Listeners<any>);
         const totalRemoved = listenerSets.reduce((accum, listenerSet) => {
-            const size = listenerSet?.size || 0;
-            listenerSet?.clear();
+            const size = listenerSet.size || 0;
+            listenerSet.clear();
             return accum + size;
         }, 0);
         this.listeners = {};

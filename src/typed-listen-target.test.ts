@@ -1,8 +1,8 @@
-import {waitUntilTruthy} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {defineTypedCustomEvent} from './events/typed-custom-event';
-import {ListenTarget, TypedListenTarget} from './typed-listen-target';
+import {assert, waitUntil} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {EmptyObject} from 'type-fest';
+import {defineTypedCustomEvent} from './events/typed-custom-event.js';
+import {ListenTarget, TypedListenTarget} from './typed-listen-target.js';
 
 export class TestEvent extends defineTypedCustomEvent<{myData: string}>()('test-event') {}
 
@@ -12,7 +12,7 @@ describe(TypedListenTarget.name, () => {
 
         listenTargetInstance.listen(TestEvent.type, () => {});
 
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 1);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 1);
     });
 
     it('removes listeners', () => {
@@ -20,16 +20,16 @@ describe(TypedListenTarget.name, () => {
 
         const removeListener = listenTargetInstance.listen(TestEvent.type, () => {});
 
-        assert.strictEqual(removeListener(), true);
-        assert.strictEqual(removeListener(), false);
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
-        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
+        assert.strictEquals(removeListener(), true);
+        assert.strictEquals(removeListener(), false);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
     });
 
     it('allows dispatching an event without listeners', () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
-        assert.strictEqual(
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             0,
         );
@@ -38,13 +38,13 @@ describe(TypedListenTarget.name, () => {
     it('removes all listeners', () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
-        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
         const removeListener = listenTargetInstance.listen(TestEvent.type, () => {});
 
-        assert.strictEqual(listenTargetInstance.removeAllListeners(), 1);
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
-        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
-        assert.strictEqual(removeListener(), false);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 1);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
+        assert.strictEquals(removeListener(), false);
     });
 
     it('allows listeners to remove themselves', async () => {
@@ -52,23 +52,23 @@ describe(TypedListenTarget.name, () => {
 
         let callCount = 0;
 
-        assert.strictEqual(listenTargetInstance.removeAllListeners(), 0);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
         listenTargetInstance.listen(TestEvent.type, (event, removeSelf) => {
             callCount++;
             removeSelf();
         });
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 1);
-        assert.strictEqual(
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 1);
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             1,
         );
 
-        await waitUntilTruthy(() => {
+        await waitUntil.isTruthy(() => {
             return callCount >= 1;
         });
 
-        assert.strictEqual(callCount, 1);
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
+        assert.strictEquals(callCount, 1);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
     });
 
     it('follows once option', async () => {
@@ -84,22 +84,22 @@ describe(TypedListenTarget.name, () => {
             {once: true},
         );
 
-        assert.strictEqual(
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             1,
         );
 
-        await waitUntilTruthy(() => {
+        await waitUntil.isTruthy(() => {
             return callCount >= 1;
         });
 
-        assert.strictEqual(callCount, 1);
-        assert.strictEqual(listenTargetInstance.getListenerCount(), 0);
+        assert.strictEquals(callCount, 1);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
     });
 
-    it('listens to an event with type parameters', async () => {
+    it('listens to an event with type parameters', () => {
         class SubEvent<
-            TypeParam extends Record<PropertyKey, any> = {},
+            TypeParam extends Record<PropertyKey, any> = EmptyObject,
         > extends defineTypedCustomEvent<unknown>()('sub-event') {
             public declare detail: TypeParam;
         }
@@ -107,7 +107,7 @@ describe(TypedListenTarget.name, () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent | SubEvent<{value: string}>>();
 
         listenTargetInstance.listen(SubEvent, (event) => {
-            assertTypeOf(event.detail).toEqualTypeOf<{value: string}>();
+            assert.tsType(event.detail).equals<{value: string}>();
         });
     });
 
@@ -117,32 +117,32 @@ describe(TypedListenTarget.name, () => {
         let callCount = 0;
 
         listenTargetInstance.listen(TestEvent, (event) => {
-            assertTypeOf(event.detail).toEqualTypeOf<{myData: string}>();
+            assert.tsType(event.detail).equals<{myData: string}>();
             callCount++;
         });
         listenTargetInstance.listen(TestEvent.type, (event) => {
-            assertTypeOf(event.detail).toEqualTypeOf<{myData: string}>();
+            assert.tsType(event.detail).equals<{myData: string}>();
             callCount++;
         });
 
-        assert.strictEqual(
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
-        assert.strictEqual(
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
-        assert.strictEqual(
+        assert.strictEquals(
             listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
             2,
         );
 
-        await waitUntilTruthy(() => {
+        await waitUntil.isTruthy(() => {
             return callCount >= 6;
         });
 
-        assert.strictEqual(callCount, 6);
+        assert.strictEquals(callCount, 6);
     });
 
     it('destroys itself', () => {
@@ -153,16 +153,16 @@ describe(TypedListenTarget.name, () => {
         instance.listen(TestEvent, (event) => {
             events.push(event);
         });
-        assert.strictEqual(instance.getListenerCount(), 1);
+        assert.strictEquals(instance.getListenerCount(), 1);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
 
         instance.destroy();
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
     });
 
     it('removes a listener with removeListener and event input', () => {
@@ -175,24 +175,24 @@ describe(TypedListenTarget.name, () => {
         }
 
         instance.listen(TestEvent, listener);
-        assert.strictEqual(instance.getListenerCount(), 1);
+        assert.strictEquals(instance.getListenerCount(), 1);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
 
         assert.isTrue(instance.removeListener(TestEvent, listener));
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
     });
 
     it('does not remove a listener with removeListener if none attached', () => {
         const instance = new TypedListenTarget<TestEvent>();
 
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
         assert.isFalse(instance.removeListener(TestEvent, () => {}));
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
     });
 
     it('does not remove a listener with removeListener if already removed', () => {
@@ -202,9 +202,9 @@ describe(TypedListenTarget.name, () => {
 
         instance.listen(TestEvent, listener);
         assert.isTrue(instance.removeListener(TestEvent, listener));
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
         assert.isFalse(instance.removeListener(TestEvent, listener));
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
     });
 
     it('removes a listener with removeListener and event type input', () => {
@@ -217,16 +217,16 @@ describe(TypedListenTarget.name, () => {
         }
 
         instance.listen(TestEvent, listener);
-        assert.strictEqual(instance.getListenerCount(), 1);
+        assert.strictEquals(instance.getListenerCount(), 1);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
 
         assert.isTrue(instance.removeListener(TestEvent.type, listener));
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
     });
 });
 
@@ -242,10 +242,10 @@ describe(ListenTarget.name, () => {
 
         instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
 
-        assert.lengthOf(events, 1);
+        assert.isLengthExactly(events, 1);
 
         instance.destroy();
 
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
     });
 });

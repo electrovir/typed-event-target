@@ -1,6 +1,7 @@
-import {assert} from '@open-wc/testing';
-import {TypedEventTarget} from '../typed-event-target';
-import {defineTypedCustomEvent} from './typed-custom-event';
+import {assert} from '@augment-vir/assert';
+import {describe, it} from '@augment-vir/test';
+import {TypedEventTarget} from '../typed-event-target.js';
+import {defineTypedCustomEvent} from './typed-custom-event.js';
 
 describe(defineTypedCustomEvent.name, () => {
     // the following it call is mostly copied from typed-events.ts
@@ -9,21 +10,21 @@ describe(defineTypedCustomEvent.name, () => {
         const instance = new thing({detail: undefined});
         const derpString: 'derp' = instance.type;
         const derpString2: 'derp' = thing.type;
-        // @ts-expect-error
+        // @ts-expect-error: test that a plain `string` can't be assigned to a string literal
         const invalidDerpString: 'derp' = 'what' as string;
-        // @ts-expect-error
+        // @ts-expect-error: test that a default event's type is not type safe
         const invalidDerpString2: 'derp' = new Event('derp').type;
 
         const derpTypedEvent = defineTypedCustomEvent()('derp');
-        class stuff extends derpTypedEvent {}
+        class TestClass extends derpTypedEvent {}
 
-        const stuffInstance = new stuff({detail: undefined});
+        const stuffInstance = new TestClass({detail: undefined});
 
-        assert.instanceOf(stuffInstance, stuff);
+        assert.instanceOf(stuffInstance, TestClass);
         assert.instanceOf(stuffInstance, derpTypedEvent);
-        assert.strictEqual(thing.type, 'derp');
-        assert.strictEqual(instance.type, 'derp');
-        assert.strictEqual(derpTypedEvent.type, 'derp');
+        assert.strictEquals(thing.type, 'derp');
+        assert.strictEquals(instance.type, 'derp');
+        assert.strictEquals(derpTypedEvent.type, 'derp');
     });
 
     it('should allow data passed to the custom event', () => {
@@ -41,12 +42,12 @@ describe(defineTypedCustomEvent.name, () => {
         });
 
         const invalidInstance = new myTypedCustomEventConstructor({
-            // @ts-expect-error
+            // @ts-expect-error: wrong detail type
             detail: 'what',
         });
 
-        assert.strictEqual(myTypedCustomEventConstructor.type, 'derp');
-        assert.deepStrictEqual(instance.detail, instanceDetail);
+        assert.strictEquals(myTypedCustomEventConstructor.type, 'derp');
+        assert.deepEquals(instance.detail, instanceDetail);
     });
 
     it('should work with a TypedEventTarget', () => {
@@ -56,24 +57,24 @@ describe(defineTypedCustomEvent.name, () => {
 
         const instance = new MyEventTarget();
 
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new Event('my-type'));
         instance.dispatchEvent(new MyCustomEvent({detail: {stuff: 'hello'}}));
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent());
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent({stuff: 'hello'}));
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent({}));
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent({detail: undefined}));
-        // @ts-expect-error
+        // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent({detail: {}}));
 
         instance.addEventListener('my-type', (event) => {
             const instance: MyCustomEvent = event;
         });
-        // @ts-expect-error
+        // @ts-expect-error: wrong type
         instance.addEventListener('my-not-real-type', () => {});
     });
 });

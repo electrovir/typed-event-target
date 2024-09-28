@@ -1,8 +1,9 @@
+import {assert} from '@augment-vir/assert';
 import {ArrayElement} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events/events.mock';
-import {TypedEventListener} from './listener';
-import {EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target';
+import {describe, it} from '@augment-vir/test';
+import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events/events.mock.js';
+import {TypedEventListener} from './listener.js';
+import {EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target.js';
 
 class ImplementedTypedEventTarget extends TypedEventTarget<SubEventHerp | SubEventDerp> {}
 
@@ -36,9 +37,9 @@ describe(TypedEventTarget.constructor.name, () => {
         const constructed = new ImplementedTypedEventTarget();
 
         constructed.dispatchEvent(new SubEventHerp());
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.dispatchEvent(new Event(SubEventTypeEnum.Derp));
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.dispatchEvent(new Event('what'));
     });
 
@@ -46,10 +47,10 @@ describe(TypedEventTarget.constructor.name, () => {
         const constructed = new ImplementedTypedEventTarget();
 
         constructed.addEventListener(SubEventTypeEnum.Derp, () => {});
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.addEventListener('what', () => {});
         // even if the string exactly matches the enum values the type won't work
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.addEventListener('herp', () => {});
     });
 
@@ -58,7 +59,7 @@ describe(TypedEventTarget.constructor.name, () => {
 
         constructed.addEventListener(SubEventTypeEnum.Derp, (event) => {
             const canAssignToExpectedEventType: SubEventDerp = event;
-            // @ts-expect-error
+            // @ts-expect-error: wrong event type
             const cannotAssignToOtherEventType: SubEventHerp = event;
         });
     });
@@ -70,11 +71,11 @@ describe(TypedEventTarget.constructor.name, () => {
         const plainEventListener: TypedEventListener<Event> = () => {};
 
         constructed.removeEventListener(SubEventTypeEnum.Derp, goodListener);
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.removeEventListener(SubEventTypeEnum.Herp, goodListener);
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.removeEventListener('herp', plainEventListener);
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         constructed.removeEventListener('another string', plainEventListener);
         constructed.removeEventListener(SubEventTypeEnum.Derp, plainEventListener);
         constructed.removeEventListener(SubEventTypeEnum.Herp, plainEventListener);
@@ -91,7 +92,7 @@ describe(TypedEventTarget.constructor.name, () => {
         try {
             constructed.addEventListener(SubEventTypeEnum.Derp, (event) => {
                 caughtEvents.push({listener: 'first-derp', event});
-                assert.strictEqual(event.type, SubEventTypeEnum.Derp);
+                assert.strictEquals(event.type, SubEventTypeEnum.Derp);
             });
 
             const firstEvent = new SubEventDerp();
@@ -101,12 +102,12 @@ describe(TypedEventTarget.constructor.name, () => {
             constructed.addEventListener(SubEventTypeEnum.Herp, (event) => {
                 caughtEvents.push({listener: 'first-herp', event});
 
-                assert.strictEqual(event.type, SubEventTypeEnum.Herp);
+                assert.strictEquals(event.type, SubEventTypeEnum.Herp);
             });
             constructed.addEventListener(SubEventTypeEnum.Herp, (event) => {
                 caughtEvents.push({listener: 'second-herp', event});
 
-                assert.strictEqual(event.type, SubEventTypeEnum.Herp);
+                assert.strictEquals(event.type, SubEventTypeEnum.Herp);
             });
 
             const doubledEvent = new SubEventHerp();
@@ -114,16 +115,16 @@ describe(TypedEventTarget.constructor.name, () => {
             const lastEvent = new SubEventDerp();
             constructed.dispatchEvent(lastEvent);
 
-            assert.strictEqual(caughtEvents.length, 4);
+            assert.strictEquals(caughtEvents.length, 4);
 
-            assert.strictEqual(caughtEvents[0]?.event, firstEvent);
+            assert.strictEquals(caughtEvents[0]?.event, firstEvent);
             assert.instanceOf(firstEvent, SubEventDerp);
 
-            assert.strictEqual(caughtEvents[1]?.event, doubledEvent);
-            assert.strictEqual(caughtEvents[2]?.event, doubledEvent);
+            assert.strictEquals(caughtEvents[1]?.event, doubledEvent);
+            assert.strictEquals(caughtEvents[2]?.event, doubledEvent);
             assert.instanceOf(doubledEvent, SubEventHerp);
 
-            assert.strictEqual(caughtEvents[3]?.event, lastEvent);
+            assert.strictEquals(caughtEvents[3]?.event, lastEvent);
             assert.instanceOf(lastEvent, SubEventDerp);
         } catch (error) {
             console.error({caughtEvents});
@@ -164,16 +165,16 @@ describe(TypedEventTarget.constructor.name, () => {
         });
 
         target.dispatchEvent(new SubEventHerp());
-        assert.strictEqual(listenerCallCount, 5);
+        assert.strictEquals<number, number>(listenerCallCount, 5);
         target.dispatchEvent(new SubEventDerp());
-        assert.strictEqual(listenerCallCount, 6);
+        assert.strictEquals(listenerCallCount, 6);
 
         target.removeAllEventListeners();
         listenerCallCount = 0;
         target.dispatchEvent(new SubEventHerp());
         target.dispatchEvent(new SubEventDerp());
-        assert.strictEqual(listenerCallCount, 0);
-        assert.strictEqual(target.getListenerCount(), 0);
+        assert.strictEquals(listenerCallCount, 0);
+        assert.strictEquals(target.getListenerCount(), 0);
     });
 
     function createListenerInputs() {
@@ -238,10 +239,10 @@ describe(TypedEventTarget.constructor.name, () => {
 
         return {
             inputs,
-            clearCallCount() {
+            clearCallCount(this: void) {
                 callCount = 0;
             },
-            getCallCount() {
+            getCallCount(this: void) {
                 return callCount;
             },
         };
@@ -255,14 +256,14 @@ describe(TypedEventTarget.constructor.name, () => {
             target.addEventListener(...listenerInputs);
             target.dispatchEvent(new SubEventHerp());
             target.dispatchEvent(new SubEventDerp());
-            assert.strictEqual(getCallCount(), 1);
-            assert.strictEqual(target.getListenerCount(), 1);
+            assert.strictEquals(getCallCount(), 1);
+            assert.strictEquals(target.getListenerCount(), 1);
             clearCallCount();
             target.removeEventListener(...listenerInputs);
             target.dispatchEvent(new SubEventHerp());
             target.dispatchEvent(new SubEventDerp());
-            assert.strictEqual(getCallCount(), 0);
-            assert.strictEqual(target.getListenerCount(), 0);
+            assert.strictEquals(getCallCount(), 0);
+            assert.strictEquals(target.getListenerCount(), 0);
         });
     });
 
@@ -278,14 +279,14 @@ describe(TypedEventTarget.constructor.name, () => {
             target.dispatchEvent(new SubEventHerp());
             target.dispatchEvent(new SubEventDerp());
 
-            assert.strictEqual(target.getListenerCount(), inputs.length);
-            assert.strictEqual(getCallCount(), inputs.length);
+            assert.strictEquals(target.getListenerCount(), inputs.length);
+            assert.strictEquals(getCallCount(), inputs.length);
             clearCallCount();
             target.removeEventListener(...listenerInputs);
             target.dispatchEvent(new SubEventHerp());
             target.dispatchEvent(new SubEventDerp());
-            assert.strictEqual(getCallCount(), inputs.length - 1);
-            assert.strictEqual(target.getListenerCount(), inputs.length - 1);
+            assert.strictEquals(getCallCount(), inputs.length - 1);
+            assert.strictEquals(target.getListenerCount(), inputs.length - 1);
             clearCallCount();
             target.removeAllEventListeners();
         });
@@ -294,9 +295,9 @@ describe(TypedEventTarget.constructor.name, () => {
     it('destroys itself', () => {
         const instance = new TypedEventTarget<SubEventDerp>();
         instance.addEventListener(SubEventTypeEnum.Derp, () => {});
-        assert.strictEqual(instance.getListenerCount(), 1);
+        assert.strictEquals(instance.getListenerCount(), 1);
         instance.destroy();
-        assert.strictEqual(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.getListenerCount(), 0);
     });
 });
 
@@ -306,11 +307,11 @@ describe('EventTypesFromEventTarget', () => {
 
         const validEvent1: AllowedEvent = new SubEventHerp();
         const validEvent2: AllowedEvent = new SubEventDerp();
-        // @ts-expect-error
+        // @ts-expect-error: wrong event class
         const invalidEvent1: AllowedEvent = new Event('herp');
-        // @ts-expect-error
+        // @ts-expect-error: wrong event class
         const invalidEvent2: AllowedEvent = new Event('derp');
-        // @ts-expect-error
+        // @ts-expect-error: wrong event type
         const invalidEvent3: AllowedEvent = new Event('whatever');
     });
 });

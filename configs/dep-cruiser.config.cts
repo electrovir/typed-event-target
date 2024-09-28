@@ -1,7 +1,7 @@
+import {defineConfig} from '@virmator/deps/configs/dep-cruiser.config.base';
 import type {IConfiguration} from 'dependency-cruiser';
-import {generateDepCruiserConfig} from 'virmator/dist/compiled-base-configs/base-dep-cruiser.config';
 
-const baseConfig = generateDepCruiserConfig({
+const baseConfig = defineConfig({
     fileExceptions: {
         // enter file exceptions by rule name here
         'no-orphans': {

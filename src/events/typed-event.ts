@@ -14,7 +14,12 @@ export interface TypedEvent<EventType extends string> extends Event {
  *
  * @category Events
  * @example
- *     defineTypedEvent('event-type-string');
+ *
+ * ```ts
+ * import {defineTypedEvent} from 'typed-event-target';
+ *
+ * defineTypedEvent('event-type-string');
+ * ```
  */
 export function defineTypedEvent<const EventType extends string>(type: EventType) {
     const TypedEventConstructor = class extends Event {

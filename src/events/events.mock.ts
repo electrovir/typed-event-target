@@ -1,5 +1,5 @@
 import {ArrayElement} from '@augment-vir/common';
-import {defineTypedEvent} from './typed-event';
+import {defineTypedEvent} from './typed-event.js';
 
 export enum SubEventTypeEnum {
     Herp = 'herp',

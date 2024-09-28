@@ -16,7 +16,7 @@ Extend `TypedEventTarget` to create your own event target with specific types, o
 
 ```TypeScript
 import {TypedEventTarget} from 'typed-event-target';
-import {MyEvent1, MyEvent2} from './typed-events.example';
+import {MyEvent1, MyEvent2} from './typed-events.example.js';
 
 export class MyTypedEventTarget extends TypedEventTarget<MyEvent1 | MyEvent2> {}
 ```
@@ -25,7 +25,7 @@ export class MyTypedEventTarget extends TypedEventTarget<MyEvent1 | MyEvent2> {}
 
 ```TypeScript
 import {TypedEventTarget} from 'typed-event-target';
-import {MyEvent1, MyEvent2} from './typed-events.example';
+import {MyEvent1, MyEvent2} from './typed-events.example.js';
 
 export const nowWithTypes = new EventTarget() as TypedEventTarget<MyEvent1 | MyEvent2>;
 ```
@@ -37,16 +37,18 @@ Instances of `TypedEventTarget` can be used just like any instance of `EventTarg
 <!-- example-link: ./src/readme-examples/event-target-usage.example.ts -->
 
 ```TypeScript
-import {MyTypedEventTarget} from './my-event-target.example';
-import {MyEvent1} from './typed-events.example';
+import {MyTypedEventTarget} from './my-event-target.example.js';
+import {MyEvent1} from './typed-events.example.js';
 
 const myInstance = new MyTypedEventTarget();
 
-myInstance.addEventListener('my-event-type-1', (event) => {
-    console.log(event);
-});
+function myListener(event: MyEvent1) {
+    console.info(event);
+}
+
+myInstance.addEventListener(MyEvent1.type, myListener);
 myInstance.dispatchEvent(new MyEvent1());
-myInstance.removeEventListener('my-event-type-2', () => {});
+myInstance.removeEventListener(MyEvent1.type, myListener);
 ```
 
 ## Typed Events
@@ -74,6 +76,6 @@ import {defineTypedCustomEvent} from 'typed-event-target';
 export class MyEvent1 extends defineTypedCustomEvent<string>()('my-event-type-1') {}
 export class MyEvent2 extends defineTypedCustomEvent<number>()('my-event-type-2') {}
 
-new MyEvent1({detail: 'five'});
-new MyEvent2({detail: 5});
+console.info(new MyEvent1({detail: 'five'}));
+console.info(new MyEvent2({detail: 5}));
 ```
