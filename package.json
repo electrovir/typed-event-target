@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
@@ -43,7 +43,8 @@
     },
     "dependencies": {
         "@augment-vir/assert": "^30.3.0",
-        "@augment-vir/common": "^30.3.0"
+        "@augment-vir/common": "^30.3.0",
+        "@augment-vir/core": "^30.3.0"
     },
     "devDependencies": {
         "@augment-vir/test": "^30.3.0",

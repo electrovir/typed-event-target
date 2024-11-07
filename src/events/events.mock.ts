@@ -1,4 +1,4 @@
-import {ArrayElement} from '@augment-vir/common';
+import {type ArrayElement} from '@augment-vir/common';
 import {defineTypedEvent} from './typed-event.js';
 
 export enum SubEventTypeEnum {

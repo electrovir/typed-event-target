@@ -1,4 +1,4 @@
-import {Overwrite} from '@augment-vir/common';
+import {type Overwrite} from '@augment-vir/common';
 
 /**
  * Sub-class of `Event` with the type string part of the type signature.

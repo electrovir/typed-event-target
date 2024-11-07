@@ -1,5 +1,5 @@
 import {assert} from '@augment-vir/assert';
-import {ArrayElement} from '@augment-vir/common';
+import {ArrayElement} from '@augment-vir/core';
 import {describe, it} from '@augment-vir/test';
 import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events/events.mock.js';
 import {TypedEventListener} from './listener.js';

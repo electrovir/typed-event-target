@@ -1,4 +1,4 @@
-import {Overwrite, type SetRequired} from '@augment-vir/common';
+import {type Overwrite, type SetRequired} from '@augment-vir/common';
 
 /**
  * Sub-class of `CustomEvent` with the detail type and event type string both being part of its type

@@ -1,4 +1,4 @@
-import {filterOutIndexes} from '@augment-vir/common';
+import {filterOutIndexes} from '@augment-vir/common/dist/augments/array/filter.js';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
 import {TypedEventListenerOrEventListenerObject} from './listener.js';
 

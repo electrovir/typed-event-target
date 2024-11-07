@@ -1,4 +1,4 @@
-import {MaybePromise} from '@augment-vir/common';
+import {type MaybePromise} from '@augment-vir/common';
 
 /**
  * Call `addEventListener` on the given `EventTarget` instance and return a callback that removes

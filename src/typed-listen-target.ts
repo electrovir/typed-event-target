@@ -1,5 +1,7 @@
 import {check} from '@augment-vir/assert';
-import {PartialWithUndefined, getObjectTypedValues, getOrSet} from '@augment-vir/common';
+import {type PartialWithUndefined} from '@augment-vir/common';
+import {getOrSet} from '@augment-vir/common/dist/augments/object/get-or-set.js';
+import {getObjectTypedValues} from '@augment-vir/common/dist/augments/object/object-values.js';
 import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
 import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener.js';
 
