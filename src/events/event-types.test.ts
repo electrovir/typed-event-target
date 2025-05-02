@@ -1,6 +1,6 @@
 import {describe, it} from '@augment-vir/test';
-import {ExtractEventByType, ExtractEventTypes} from './event-types.js';
-import {PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock.js';
+import {type ExtractEventByType, type ExtractEventTypes} from './event-types.js';
+import {type PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock.js';
 
 describe('ExtractEventByType', () => {
     it('should extract event types from a list of possible events', () => {

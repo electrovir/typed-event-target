@@ -1,9 +1,9 @@
 import {assert} from '@augment-vir/assert';
-import {ArrayElement} from '@augment-vir/core';
+import {type ArrayElement} from '@augment-vir/core';
 import {describe, it} from '@augment-vir/test';
 import {SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events/events.mock.js';
-import {TypedEventListener} from './listener.js';
-import {EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target.js';
+import {type TypedEventListener} from './listener.js';
+import {type EventTypesFromEventTarget, TypedEventTarget} from './typed-event-target.js';
 
 class ImplementedTypedEventTarget extends TypedEventTarget<SubEventHerp | SubEventDerp> {}
 

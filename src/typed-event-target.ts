@@ -1,6 +1,6 @@
 import {filterOutIndexes} from '@augment-vir/common/dist/augments/array/filter.js';
-import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
-import {TypedEventListenerOrEventListenerObject} from './listener.js';
+import {type ExtractEventByType, type ExtractEventTypes} from './events/event-types.js';
+import {type TypedEventListenerOrEventListenerObject} from './listener.js';
 
 /**
  * Extract event types from an already-defined `TypedEventTarget` instance or sub-class.

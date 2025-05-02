@@ -1,6 +1,6 @@
 import {assert, waitUntil} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
-import {EmptyObject} from 'type-fest';
+import {type EmptyObject} from 'type-fest';
 import {defineTypedCustomEvent} from './events/typed-custom-event.js';
 import {ListenTarget, TypedListenTarget} from './typed-listen-target.js';
 

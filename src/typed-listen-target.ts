@@ -2,8 +2,8 @@ import {check} from '@augment-vir/assert';
 import {type PartialWithUndefined} from '@augment-vir/common';
 import {getOrSet} from '@augment-vir/common/dist/augments/object/get-or-set.js';
 import {getObjectTypedValues} from '@augment-vir/common/dist/augments/object/object-values.js';
-import {ExtractEventByType, ExtractEventTypes} from './events/event-types.js';
-import {RemoveListenerCallback, TypedEventListenerWithRemoval} from './listener.js';
+import {type ExtractEventByType, type ExtractEventTypes} from './events/event-types.js';
+import {type RemoveListenerCallback, type TypedEventListenerWithRemoval} from './listener.js';
 
 /**
  * Extract event types from an already-defined `TypedListenTarget` instance or sub-class.

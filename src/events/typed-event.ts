@@ -23,7 +23,7 @@ export interface TypedEvent<EventType extends string> extends Event {
  */
 export function defineTypedEvent<const EventType extends string>(type: EventType) {
     const TypedEventConstructor = class extends Event {
-        static readonly type = type;
+        public static readonly type = type;
         constructor(eventInitDict?: EventInit) {
             super(type, eventInitDict);
         }

@@ -32,7 +32,7 @@ export function defineTypedCustomEvent<const EventDetail = undefined>() {
     /** Needs to be called with the type string in order to finalize the event definition setup. */
     function defineEventTypeString<EventType extends string>(type: EventType) {
         const TypedEventConstructor = class extends CustomEvent<EventDetail> {
-            static readonly type = type;
+            public static readonly type = type;
 
             constructor(eventInitDict: TypedCustomEventInit<EventDetail>) {
                 super(type, eventInitDict);

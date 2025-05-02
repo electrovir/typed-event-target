@@ -16,7 +16,7 @@ Extend `TypedEventTarget` to create your own event target with specific types, o
 
 ```TypeScript
 import {TypedEventTarget} from 'typed-event-target';
-import {MyEvent1, MyEvent2} from './typed-events.example.js';
+import {type MyEvent1, type MyEvent2} from './typed-events.example.js';
 
 export class MyTypedEventTarget extends TypedEventTarget<MyEvent1 | MyEvent2> {}
 ```
@@ -24,8 +24,8 @@ export class MyTypedEventTarget extends TypedEventTarget<MyEvent1 | MyEvent2> {}
 <!-- example-link: ./src/readme-examples/adding-types.example.ts -->
 
 ```TypeScript
-import {TypedEventTarget} from 'typed-event-target';
-import {MyEvent1, MyEvent2} from './typed-events.example.js';
+import {type TypedEventTarget} from 'typed-event-target';
+import {type MyEvent1, type MyEvent2} from './typed-events.example.js';
 
 export const nowWithTypes = new EventTarget() as TypedEventTarget<MyEvent1 | MyEvent2>;
 ```
