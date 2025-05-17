@@ -164,6 +164,9 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
      */
     public dispatch(event: PossibleEvents): number {
         const listenerSet = this.listeners[event.type as ExtractEventTypes<PossibleEvents>];
+        if (event.target == undefined) {
+            Object.defineProperty(event, 'target', {writable: false, value: this});
+        }
 
         /**
          * This must be calculated before calling the listeners as the listeners might remove
