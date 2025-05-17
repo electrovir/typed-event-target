@@ -3,7 +3,7 @@ import {type Overwrite} from '@augment-vir/common';
 /**
  * Sub-class of `Event` with the type string part of the type signature.
  *
- * @category Types
+ * @category Internal
  */
 export interface TypedEvent<EventType extends string> extends Event {
     readonly type: EventType;

@@ -4,7 +4,7 @@ import {type Overwrite, type SetRequired} from '@augment-vir/common';
  * Sub-class of `CustomEvent` with the detail type and event type string both being part of its type
  * signature.
  *
- * @category Types
+ * @category Internal
  */
 export interface TypedCustomEvent<EventDetail, EventType extends string>
     extends CustomEvent<EventDetail> {
@@ -14,7 +14,7 @@ export interface TypedCustomEvent<EventDetail, EventType extends string>
 /**
  * Init input for TypedCustomEvent instances.
  *
- * @category Types
+ * @category Internal
  */
 export type TypedCustomEventInit<EventDetail> = SetRequired<CustomEventInit<EventDetail>, 'detail'>;
 

@@ -8,7 +8,7 @@ import {type RemoveListenerCallback, type TypedEventListenerWithRemoval} from '.
 /**
  * Extract event types from an already-defined `TypedListenTarget` instance or sub-class.
  *
- * @category Types
+ * @category Internal
  */
 export type EventTypesFromListenTarget<EventTargetGeneric extends TypedListenTarget<Event>> =
     EventTargetGeneric extends TypedListenTarget<infer InferredEventTypeGeneric>
@@ -18,7 +18,7 @@ export type EventTypesFromListenTarget<EventTargetGeneric extends TypedListenTar
 /**
  * Optional options for `TypedListenTarget.listen`.
  *
- * @category Types
+ * @category Internal
  */
 export type ListenOptions = PartialWithUndefined<{
     once: boolean;
@@ -252,9 +252,9 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         const listenerSets = getObjectTypedValues(this.listeners as Listeners<any>);
         const totalRemoved =
             listenerSets.reduce((accum, listenerSet) => {
-            const size = listenerSet.size || 0;
-            listenerSet.clear();
-            return accum + size;
+                const size = listenerSet.size || 0;
+                listenerSet.clear();
+                return accum + size;
             }, 0) + this.universalListeners.size;
         this.listeners = {};
         this.universalListeners.clear();

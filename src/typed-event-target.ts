@@ -5,7 +5,7 @@ import {type TypedEventListenerOrEventListenerObject} from './listener.js';
 /**
  * Extract event types from an already-defined `TypedEventTarget` instance or sub-class.
  *
- * @category Types
+ * @category Internal
  */
 export type EventTypesFromEventTarget<EventTargetGeneric extends TypedEventTarget<Event>> =
     EventTargetGeneric extends TypedEventTarget<infer InferredEventTypeGeneric>

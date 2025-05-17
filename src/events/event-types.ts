@@ -1,14 +1,14 @@
 /**
  * Extract all event type string types from a union of events.
  *
- * @category Types
+ * @category Internal
  */
 export type ExtractEventTypes<EventsUnion extends Readonly<Event>> = EventsUnion['type'];
 
 /**
  * Extract an event type from a union based on the event type string.
  *
- * @category Types
+ * @category Internal
  */
 export type ExtractEventByType<
     EventsUnion extends Readonly<Event>,

@@ -1,14 +1,14 @@
 /**
  * Callbacks that get fired when an event is dispatched.
  *
- * @category Types
+ * @category Internal
  */
 export type TypedEventListener<EventGeneric extends Event> = (event: EventGeneric) => void;
 
 /**
  * Callbacks that get fired when an event is dispatched.
  *
- * @category Types
+ * @category Internal
  */
 export type TypedEventListenerWithRemoval<EventGeneric extends Event> = (
     event: EventGeneric,
@@ -18,7 +18,7 @@ export type TypedEventListenerWithRemoval<EventGeneric extends Event> = (
 /**
  * An object that includes a `handleEvent` method for listening to event dispatches.
  *
- * @category Types
+ * @category Internal
  */
 export type TypedEventListenerObject<EventGeneric extends Event> = {
     handleEvent: TypedEventListener<EventGeneric>;
@@ -27,7 +27,7 @@ export type TypedEventListenerObject<EventGeneric extends Event> = {
 /**
  * Either an object wrapping a listener callback function or a listener callback function itself.
  *
- * @category Types
+ * @category Internal
  */
 export type TypedEventListenerOrEventListenerObject<EventGeneric extends Event> =
     | TypedEventListener<EventGeneric>
@@ -37,7 +37,7 @@ export type TypedEventListenerOrEventListenerObject<EventGeneric extends Event> 
  * Remove an event listener. Instances of this are only obtained by using
  * `TypedListenTarget.listen`.
  *
- * @category Types
+ * @category Internal
  * @returns True if it was removed.
  */
 export type RemoveListenerCallback = () => boolean;
