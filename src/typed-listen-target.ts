@@ -35,6 +35,19 @@ type Listeners<PossibleEvents extends Readonly<Event>> = Partial<{
 }>;
 
 /**
+ * Listeners that are listening to all events.
+ *
+ * @category Internal
+ */
+export type UniversalListeners<PossibleEvents extends Readonly<Event>> = Map<
+    TypedEventListenerWithRemoval<PossibleEvents>,
+    {
+        listener: TypedEventListenerWithRemoval<PossibleEvents>;
+        removeListener: RemoveListenerCallback;
+    }
+>;
+
+/**
  * Similar to `TypedEventTarget` except that it uses a `listen` method to add listeners and that
  * method returns a callback to remove the attached listener rather than having a
  * `removeEventListener` method.
@@ -42,7 +55,10 @@ type Listeners<PossibleEvents extends Readonly<Event>> = Partial<{
  * @category Main
  */
 export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = never> {
+    /** All listeners that are listening to specific events. */
     protected listeners: Listeners<PossibleEvents> = {};
+    /** All listeners that are listening to _all_ events. */
+    protected readonly universalListeners: UniversalListeners<PossibleEvents> = new Map();
 
     /**
      * Get a count of all currently attached listeners. If a listener is removed, it will no longer
@@ -52,7 +68,46 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         const counts = getObjectTypedValues(this.listeners as Listeners<any>).map(
             (listenersEntry) => listenersEntry.size || 0,
         );
-        return counts.reduce((accum, current) => accum + current, 0);
+        return counts.reduce((accum, current) => accum + current, 0) + this.universalListeners.size;
+    }
+
+    /**
+     * Attach a listener that will be fired on any and all events.
+     *
+     * @returns A callback to remove the listener.
+     */
+    public listenToAll(
+        listenerCallback: TypedEventListenerWithRemoval<PossibleEvents>,
+        options: ListenOptions | undefined = {},
+    ) {
+        const removeListener = (): boolean => {
+            return this.universalListeners.delete(listenerCallback) || false;
+        };
+
+        function wrappedCallback(event: PossibleEvents, removeSelf: RemoveListenerCallback) {
+            if (options.once) {
+                removeListener();
+            }
+            listenerCallback(event, removeSelf);
+        }
+
+        this.universalListeners.set(listenerCallback, {
+            listener: wrappedCallback,
+            removeListener,
+        });
+
+        return removeListener;
+    }
+
+    /**
+     * Remove a previous attached universal listener (added via `.listenToAll`).
+     *
+     * @returns Whether the listener existed and was removed or not.
+     */
+    public removeUniversalListener(
+        listenerCallback: TypedEventListenerWithRemoval<PossibleEvents>,
+    ): boolean {
+        return !!this.universalListeners.get(listenerCallback)?.removeListener();
     }
 
     /**
@@ -92,15 +147,15 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         listenerCallback: TypedEventListenerWithRemoval<any>,
         options: ListenOptions | undefined = {},
     ): RemoveListenerCallback {
-        const listeners = this.listeners;
         const eventType: ExtractEventTypes<PossibleEvents> = check.isString(eventTypeOrConstructor)
             ? eventTypeOrConstructor
             : eventTypeOrConstructor.type;
 
-        function removeListener(): boolean {
-            return listeners[eventType]?.delete(listenerCallback) || false;
-        }
+        const removeListener = (): boolean => {
+            return this.listeners[eventType]?.delete(listenerCallback) || false;
+        };
 
+        // eslint-disable-next-line sonarjs/no-identical-functions
         function wrappedCallback(event: PossibleEvents, removeSelf: RemoveListenerCallback) {
             if (options.once) {
                 removeListener();
@@ -109,7 +164,7 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
         }
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        getOrSet(listeners, eventType, () => new Map())!.set(listenerCallback, {
+        getOrSet(this.listeners, eventType, () => new Map())!.set(listenerCallback, {
             listener: wrappedCallback,
             removeListener,
         });
@@ -181,22 +236,28 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
             );
         });
 
-        return size;
+        this.universalListeners.forEach((listenerWrapper) => {
+            listenerWrapper.listener(event, listenerWrapper.removeListener);
+        });
+
+        return size + this.universalListeners.size;
     }
 
     /**
-     * Remove all currently attached event listeners.
+     * Remove all currently attached event and universal listeners.
      *
      * @returns The number of listeners that were removed.
      */
     public removeAllListeners(): number {
         const listenerSets = getObjectTypedValues(this.listeners as Listeners<any>);
-        const totalRemoved = listenerSets.reduce((accum, listenerSet) => {
+        const totalRemoved =
+            listenerSets.reduce((accum, listenerSet) => {
             const size = listenerSet.size || 0;
             listenerSet.clear();
             return accum + size;
-        }, 0);
+            }, 0) + this.universalListeners.size;
         this.listeners = {};
+        this.universalListeners.clear();
 
         return totalRemoved;
     }

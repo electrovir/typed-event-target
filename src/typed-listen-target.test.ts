@@ -11,8 +11,9 @@ describe(TypedListenTarget.name, () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
         listenTargetInstance.listen(TestEvent.type, () => {});
+        listenTargetInstance.listenToAll(() => {});
 
-        assert.strictEquals(listenTargetInstance.getListenerCount(), 1);
+        assert.strictEquals(listenTargetInstance.getListenerCount(), 2);
     });
 
     it('removes listeners', () => {
@@ -24,6 +25,39 @@ describe(TypedListenTarget.name, () => {
         assert.strictEquals(removeListener(), false);
         assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
         assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
+    });
+
+    it('supports universal listeners', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        const events: TestEvent[] = [];
+
+        const removeListener = instance.listenToAll((event) => {
+            events.push(event);
+        });
+        const originalListener2 = () => {};
+
+        instance.listenToAll(originalListener2, {once: true});
+
+        assert.strictEquals(instance.dispatch(new TestEvent({detail: {myData: 'hi'}})), 1);
+        assert.strictEquals(events[0]?.target as any, instance);
+        assert.isFalse(instance.removeUniversalListener(originalListener2));
+
+        assert.strictEquals(instance.getListenerCount(), 1);
+        assert.strictEquals(instance.removeAllListeners(), 1);
+
+        assert.isFalse(removeListener());
+        assert.strictEquals(instance.getListenerCount(), 0);
+        assert.strictEquals(instance.removeAllListeners(), 0);
+    });
+    it('can remove universal listeners', () => {
+        const instance = new TypedListenTarget<TestEvent>();
+
+        const originalListener = () => {};
+
+        instance.listenToAll(originalListener, {once: true});
+        assert.isTrue(instance.removeUniversalListener(originalListener));
+        assert.isFalse(instance.removeUniversalListener(originalListener));
     });
 
     it('allows dispatching an event without listeners', () => {
@@ -40,11 +74,13 @@ describe(TypedListenTarget.name, () => {
 
         assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
         const removeListener = listenTargetInstance.listen(TestEvent.type, () => {});
+        const removeUniversalListener = listenTargetInstance.listenToAll(() => {});
 
-        assert.strictEquals(listenTargetInstance.removeAllListeners(), 1);
+        assert.strictEquals(listenTargetInstance.removeAllListeners(), 2);
         assert.strictEquals(listenTargetInstance.getListenerCount(), 0);
         assert.strictEquals(listenTargetInstance.removeAllListeners(), 0);
         assert.strictEquals(removeListener(), false);
+        assert.strictEquals(removeUniversalListener(), false);
     });
 
     it('allows listeners to remove themselves', async () => {
