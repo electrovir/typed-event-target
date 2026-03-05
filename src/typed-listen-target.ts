@@ -24,7 +24,12 @@ export type ListenOptions = PartialWithUndefined<{
     once: boolean;
 }>;
 
-type Listeners<PossibleEvents extends Readonly<Event>> = Partial<{
+/**
+ * An object of listeners for all the given events.
+ *
+ * @category Internal
+ */
+export type Listeners<PossibleEvents extends Readonly<Event>> = Partial<{
     [EventType in ExtractEventTypes<PossibleEvents>]: Map<
         TypedEventListenerWithRemoval<ExtractEventByType<PossibleEvents, EventType>>,
         {
@@ -220,7 +225,10 @@ export class TypedListenTarget<const PossibleEvents extends Readonly<Event> = ne
     public dispatch(event: PossibleEvents): number {
         const listenerSet = this.listeners[event.type as ExtractEventTypes<PossibleEvents>];
         if (event.target == undefined) {
-            Object.defineProperty(event, 'target', {writable: false, value: this});
+            Object.defineProperty(event, 'target', {
+                writable: false,
+                value: this,
+            });
         }
 
         /**

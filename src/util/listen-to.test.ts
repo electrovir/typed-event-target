@@ -22,7 +22,9 @@ describe(listenTo.name, () => {
 
         remover();
         await testWeb.click(instance);
-        await wait({seconds: 1});
+        await wait({
+            seconds: 1,
+        });
         assert.isLengthExactly(events, 1);
     });
 });
@@ -45,7 +47,9 @@ describe(listenToGlobal.name, () => {
 
         remover();
         await testWeb.click(instance);
-        await wait({seconds: 1});
+        await wait({
+            seconds: 1,
+        });
         assert.isLengthExactly(events, 1);
     });
 });

@@ -49,7 +49,11 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
             options,
         );
         if (callback) {
-            this.setupListeners.push({type, callback, options});
+            this.setupListeners.push({
+                type,
+                callback,
+                options,
+            });
         }
     }
 

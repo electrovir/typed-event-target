@@ -91,7 +91,10 @@ describe(TypedEventTarget.constructor.name, () => {
 
         try {
             constructed.addEventListener(SubEventTypeEnum.Derp, (event) => {
-                caughtEvents.push({listener: 'first-derp', event});
+                caughtEvents.push({
+                    listener: 'first-derp',
+                    event,
+                });
                 assert.strictEquals(event.type, SubEventTypeEnum.Derp);
             });
 
@@ -100,12 +103,18 @@ describe(TypedEventTarget.constructor.name, () => {
             constructed.dispatchEvent(new SubEventHerp());
 
             constructed.addEventListener(SubEventTypeEnum.Herp, (event) => {
-                caughtEvents.push({listener: 'first-herp', event});
+                caughtEvents.push({
+                    listener: 'first-herp',
+                    event,
+                });
 
                 assert.strictEquals(event.type, SubEventTypeEnum.Herp);
             });
             constructed.addEventListener(SubEventTypeEnum.Herp, (event) => {
-                caughtEvents.push({listener: 'second-herp', event});
+                caughtEvents.push({
+                    listener: 'second-herp',
+                    event,
+                });
 
                 assert.strictEquals(event.type, SubEventTypeEnum.Herp);
             });
@@ -127,7 +136,9 @@ describe(TypedEventTarget.constructor.name, () => {
             assert.strictEquals(caughtEvents[3]?.event, lastEvent);
             assert.instanceOf(lastEvent, SubEventDerp);
         } catch (error) {
-            console.error({caughtEvents});
+            console.error({
+                caughtEvents,
+            });
             throw error;
         }
     });
@@ -151,14 +162,18 @@ describe(TypedEventTarget.constructor.name, () => {
             () => {
                 listenerCallCount++;
             },
-            {capture: true},
+            {
+                capture: true,
+            },
         );
         target.addEventListener(
             SubEventTypeEnum.Herp,
             () => {
                 listenerCallCount++;
             },
-            {capture: false},
+            {
+                capture: false,
+            },
         );
         target.addEventListener(SubEventTypeEnum.Derp, () => {
             listenerCallCount++;
@@ -206,14 +221,18 @@ describe(TypedEventTarget.constructor.name, () => {
                 () => {
                     callCount++;
                 },
-                {capture: true},
+                {
+                    capture: true,
+                },
             ],
             [
                 SubEventTypeEnum.Herp,
                 () => {
                     callCount++;
                 },
-                {capture: false},
+                {
+                    capture: false,
+                },
             ],
             [
                 SubEventTypeEnum.Herp,

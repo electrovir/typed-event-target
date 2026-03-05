@@ -37,9 +37,20 @@ describe(TypedListenTarget.name, () => {
         });
         const originalListener2 = () => {};
 
-        instance.listenToAll(originalListener2, {once: true});
+        instance.listenToAll(originalListener2, {
+            once: true,
+        });
 
-        assert.strictEquals(instance.dispatch(new TestEvent({detail: {myData: 'hi'}})), 1);
+        assert.strictEquals(
+            instance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
+            1,
+        );
         assert.strictEquals(events[0]?.target as any, instance);
         assert.isFalse(instance.removeUniversalListener(originalListener2));
 
@@ -55,7 +66,9 @@ describe(TypedListenTarget.name, () => {
 
         const originalListener = () => {};
 
-        instance.listenToAll(originalListener, {once: true});
+        instance.listenToAll(originalListener, {
+            once: true,
+        });
         assert.isTrue(instance.removeUniversalListener(originalListener));
         assert.isFalse(instance.removeUniversalListener(originalListener));
     });
@@ -64,7 +77,13 @@ describe(TypedListenTarget.name, () => {
         const listenTargetInstance = new TypedListenTarget<TestEvent>();
 
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             0,
         );
     });
@@ -95,7 +114,13 @@ describe(TypedListenTarget.name, () => {
         });
         assert.strictEquals(listenTargetInstance.getListenerCount(), 1);
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             1,
         );
 
@@ -117,11 +142,19 @@ describe(TypedListenTarget.name, () => {
             () => {
                 callCount++;
             },
-            {once: true},
+            {
+                once: true,
+            },
         );
 
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             1,
         );
 
@@ -162,15 +195,33 @@ describe(TypedListenTarget.name, () => {
         });
 
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             2,
         );
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             2,
         );
         assert.strictEquals(
-            listenTargetInstance.dispatch(new TestEvent({detail: {myData: 'hi'}})),
+            listenTargetInstance.dispatch(
+                new TestEvent({
+                    detail: {
+                        myData: 'hi',
+                    },
+                }),
+            ),
             2,
         );
 
@@ -191,13 +242,25 @@ describe(TypedListenTarget.name, () => {
         });
         assert.strictEquals(instance.getListenerCount(), 1);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
 
         instance.destroy();
         assert.strictEquals(instance.getListenerCount(), 0);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
     });
 
@@ -213,13 +276,25 @@ describe(TypedListenTarget.name, () => {
         instance.listen(TestEvent, listener);
         assert.strictEquals(instance.getListenerCount(), 1);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
 
         assert.isTrue(instance.removeListener(TestEvent, listener));
         assert.strictEquals(instance.getListenerCount(), 0);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
     });
 
@@ -255,13 +330,25 @@ describe(TypedListenTarget.name, () => {
         instance.listen(TestEvent, listener);
         assert.strictEquals(instance.getListenerCount(), 1);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
 
         assert.isTrue(instance.removeListener(TestEvent.type, listener));
         assert.strictEquals(instance.getListenerCount(), 0);
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
         assert.isLengthExactly(events, 1);
     });
 });
@@ -276,7 +363,13 @@ describe(ListenTarget.name, () => {
             events.push(event);
         });
 
-        instance.dispatch(new TestEvent({detail: {myData: 'hello there'}}));
+        instance.dispatch(
+            new TestEvent({
+                detail: {
+                    myData: 'hello there',
+                },
+            }),
+        );
 
         assert.isLengthExactly(events, 1);
 

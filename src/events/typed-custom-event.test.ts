@@ -7,7 +7,9 @@ describe(defineTypedCustomEvent.name, () => {
     // the following it call is mostly copied from typed-events.ts
     it('should produce the correct custom event types', () => {
         const thing = defineTypedCustomEvent()('derp');
-        const instance = new thing({detail: undefined});
+        const instance = new thing({
+            detail: undefined,
+        });
         const derpString: 'derp' = instance.type;
         const derpString2: 'derp' = thing.type;
         // @ts-expect-error: test that a plain `string` can't be assigned to a string literal
@@ -18,7 +20,9 @@ describe(defineTypedCustomEvent.name, () => {
         const derpTypedEvent = defineTypedCustomEvent()('derp');
         class TestClass extends derpTypedEvent {}
 
-        const stuffInstance = new TestClass({detail: undefined});
+        const stuffInstance = new TestClass({
+            detail: undefined,
+        });
 
         assert.instanceOf(stuffInstance, TestClass);
         assert.instanceOf(stuffInstance, derpTypedEvent);
@@ -59,17 +63,35 @@ describe(defineTypedCustomEvent.name, () => {
 
         // @ts-expect-error: wrong event
         instance.dispatchEvent(new Event('my-type'));
-        instance.dispatchEvent(new MyCustomEvent({detail: {stuff: 'hello'}}));
+        instance.dispatchEvent(
+            new MyCustomEvent({
+                detail: {
+                    stuff: 'hello',
+                },
+            }),
+        );
         // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent());
-        // @ts-expect-error: wrong event
-        instance.dispatchEvent(new MyCustomEvent({stuff: 'hello'}));
+        instance.dispatchEvent(
+            new MyCustomEvent({
+                // @ts-expect-error: wrong event
+                stuff: 'hello',
+            }),
+        );
         // @ts-expect-error: wrong event
         instance.dispatchEvent(new MyCustomEvent({}));
-        // @ts-expect-error: wrong event
-        instance.dispatchEvent(new MyCustomEvent({detail: undefined}));
-        // @ts-expect-error: wrong event
-        instance.dispatchEvent(new MyCustomEvent({detail: {}}));
+        instance.dispatchEvent(
+            new MyCustomEvent({
+                // @ts-expect-error: wrong event
+                detail: undefined,
+            }),
+        );
+        instance.dispatchEvent(
+            new MyCustomEvent({
+                // @ts-expect-error: wrong event
+                detail: {},
+            }),
+        );
 
         instance.addEventListener('my-type', (event) => {
             const instance: MyCustomEvent = event;
