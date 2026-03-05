@@ -24,4 +24,34 @@ describe(defineTypedEvent.name, () => {
         assert.strictEquals(instance.type, 'derp');
         assert.strictEquals(derpTypedEvent.type, 'derp');
     });
+
+    it('should extend a custom super class at runtime', () => {
+        class MyCustomEvent extends Event {
+            public readonly customProp = 'hello';
+        }
+
+        const MyTypedEvent = defineTypedEvent('my-event', MyCustomEvent);
+        const instance = new MyTypedEvent();
+
+        assert.instanceOf(instance, Event);
+        assert.instanceOf(instance, MyCustomEvent);
+        assert.instanceOf(instance, MyTypedEvent);
+        assert.strictEquals(instance.type, 'my-event');
+        assert.strictEquals(instance.customProp, 'hello');
+    });
+
+    it('should reflect the custom super class in the type system', () => {
+        class MyCustomEvent extends Event {
+            public readonly customProp = 'hello';
+        }
+
+        const MyTypedEvent = defineTypedEvent('my-event', MyCustomEvent);
+        const instance = new MyTypedEvent();
+
+        assert.tsType(instance).matches<MyCustomEvent>();
+        assert.tsType(instance).matches<Event>();
+        assert.tsType(instance.type).equals<'my-event'>();
+        assert.tsType(instance.customProp).equals<string>();
+        assert.tsType(MyTypedEvent.type).equals<'my-event'>();
+    });
 });
