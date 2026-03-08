@@ -1,6 +1,6 @@
 {
     "name": "typed-event-target",
-    "version": "4.2.0",
+    "version": "4.3.0",
     "description": "EventTarget in the browser but with strong event typing.",
     "keywords": [
         "browser",
