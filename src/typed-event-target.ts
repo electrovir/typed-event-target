@@ -83,25 +83,18 @@ export class TypedEventTarget<const PossibleEvents extends Readonly<Event>> exte
         );
 
         const previouslyAddedListenerIndex = this.setupListeners.findIndex((listener) => {
-            if (listener.type !== type) {
+            if (
+                listener.type !== type ||
+                ((typeof options !== 'undefined' || typeof listener.options !== 'undefined') &&
+                    (typeof options !== typeof listener.options ||
+                        (typeof listener.options === 'boolean' &&
+                            typeof options === 'boolean' &&
+                            options !== listener.options) ||
+                        (typeof listener.options === 'object' &&
+                            typeof options === 'object' &&
+                            options.capture !== listener.options.capture)))
+            ) {
                 return false;
-            }
-
-            if (typeof options !== 'undefined' || typeof listener.options !== 'undefined') {
-                if (typeof options !== typeof listener.options) {
-                    return false;
-                }
-
-                if (
-                    (typeof listener.options === 'boolean' &&
-                        typeof options === 'boolean' &&
-                        options !== listener.options) ||
-                    (typeof listener.options === 'object' &&
-                        typeof options === 'object' &&
-                        options.capture !== listener.options.capture)
-                ) {
-                    return false;
-                }
             }
 
             return listener.callback === callback;
