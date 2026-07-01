@@ -3,13 +3,13 @@ import {type ExtractEventByType, type ExtractEventTypes} from './event-types.js'
 import {type PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock.js';
 
 describe('ExtractEventByType', () => {
-    it('should extract event types from a list of possible events', () => {
+    it('extracts event types from a list of possible events', () => {
         const validEvent: PossibleEvent = new SubEventDerp();
         // @ts-expect-error: PossibleEvent can't accept other Event constructors
         const invalidEvent: PossibleEvent = new Event('word');
     });
 
-    it('should narrow a union of possible events', () => {
+    it('narrows a union of possible events', () => {
         type NarrowedType = ExtractEventByType<PossibleEvent, typeof SubEventTypeEnum.Derp>;
 
         const validInstance: NarrowedType = new SubEventDerp();
@@ -17,11 +17,11 @@ describe('ExtractEventByType', () => {
         const invalidInstance: NarrowedType = new SubEventHerp();
     });
 
-    it('should restrict event dispatches to given types', () => {});
+    it('restricts event dispatches to given types', () => {});
 });
 
 describe('ExtractEventTypes', () => {
-    it('should extract event types from events', () => {
+    it('extracts event types from events', () => {
         type PossibleEventTypes = ExtractEventTypes<PossibleEvent>;
 
         const validType1: PossibleEventTypes = SubEventTypeEnum.Derp;

@@ -23,17 +23,17 @@ describe(TypedEventTarget.constructor.name, () => {
         assert.notInstanceOf(new ImplementedTypedEventTarget(), OtherImplementation);
     });
 
-    it('should be constructable', () => {
+    it('is constructable', () => {
         const constructed = new TypedEventTarget();
         assert.instanceOf(constructed, TypedEventTarget);
     });
 
-    it('should have constructable implementations', () => {
+    it('has constructable implementations', () => {
         const constructed = new ImplementedTypedEventTarget();
         assert.instanceOf(constructed, ImplementedTypedEventTarget);
     });
 
-    it('should require dispatches to use correct event types', () => {
+    it('requires dispatches to use correct event types', () => {
         const constructed = new ImplementedTypedEventTarget();
 
         constructed.dispatchEvent(new SubEventHerp());
@@ -43,7 +43,7 @@ describe(TypedEventTarget.constructor.name, () => {
         constructed.dispatchEvent(new Event('what'));
     });
 
-    it('should restrict event listener types', () => {
+    it('restricts event listener types', () => {
         const constructed = new ImplementedTypedEventTarget();
 
         constructed.addEventListener(SubEventTypeEnum.Derp, () => {});
@@ -54,7 +54,7 @@ describe(TypedEventTarget.constructor.name, () => {
         constructed.addEventListener('herp', () => {});
     });
 
-    it('should provide type information to the event listeners', () => {
+    it('provides type information to the event listeners', () => {
         const constructed = new ImplementedTypedEventTarget();
 
         constructed.addEventListener(SubEventTypeEnum.Derp, (event) => {
@@ -64,7 +64,7 @@ describe(TypedEventTarget.constructor.name, () => {
         });
     });
 
-    it('should restrict event types to removing a listener', () => {
+    it('restricts event types to removing a listener', () => {
         const constructed = new ImplementedTypedEventTarget();
 
         const goodListener: TypedEventListener<SubEventDerp> = () => {};
@@ -81,7 +81,7 @@ describe(TypedEventTarget.constructor.name, () => {
         constructed.removeEventListener(SubEventTypeEnum.Herp, plainEventListener);
     });
 
-    it('should actually pass events to event listeners', () => {
+    it('actually passes events to event listeners', () => {
         const constructed = new ImplementedTypedEventTarget();
 
         const caughtEvents: {
@@ -321,7 +321,7 @@ describe(TypedEventTarget.constructor.name, () => {
 });
 
 describe('EventTypesFromEventTarget', () => {
-    it('should only allow the given event types', () => {
+    it('only allows the given event types', () => {
         type AllowedEvent = EventTypesFromEventTarget<ImplementedTypedEventTarget>;
 
         const validEvent1: AllowedEvent = new SubEventHerp();

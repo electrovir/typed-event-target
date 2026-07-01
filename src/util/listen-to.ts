@@ -1,3 +1,4 @@
+/* eslint-disable @virmator/prefer-params-object */
 import {type MaybePromise} from '@augment-vir/common';
 
 /**

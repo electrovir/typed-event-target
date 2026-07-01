@@ -3,7 +3,7 @@ import {describe, it} from '@augment-vir/test';
 import {defineTypedEvent} from './typed-event.js';
 
 describe(defineTypedEvent.name, () => {
-    it('should produce the correct types', () => {
+    it('produces the correct types', () => {
         const thing = defineTypedEvent('derp');
         const instance = new thing();
         const derpString: 'derp' = instance.type;
@@ -25,7 +25,7 @@ describe(defineTypedEvent.name, () => {
         assert.strictEquals(derpTypedEvent.type, 'derp');
     });
 
-    it('should extend a custom super class at runtime', () => {
+    it('extends a custom super class at runtime', () => {
         class MyCustomEvent extends Event {
             public readonly customProp = 'hello';
         }
@@ -40,7 +40,7 @@ describe(defineTypedEvent.name, () => {
         assert.strictEquals(instance.customProp, 'hello');
     });
 
-    it('should reflect the custom super class in the type system', () => {
+    it('reflects the custom super class in the type system', () => {
         class MyCustomEvent extends Event {
             public readonly customProp = 'hello';
         }

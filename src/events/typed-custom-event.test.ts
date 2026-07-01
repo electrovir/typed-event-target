@@ -5,7 +5,7 @@ import {defineTypedCustomEvent} from './typed-custom-event.js';
 
 describe(defineTypedCustomEvent.name, () => {
     // the following it call is mostly copied from typed-events.ts
-    it('should produce the correct custom event types', () => {
+    it('produces the correct custom event types', () => {
         const thing = defineTypedCustomEvent()('derp');
         const instance = new thing({
             detail: undefined,
@@ -31,7 +31,7 @@ describe(defineTypedCustomEvent.name, () => {
         assert.strictEquals(derpTypedEvent.type, 'derp');
     });
 
-    it('should allow data passed to the custom event', () => {
+    it('allows data passed to the custom event', () => {
         type AcceptedData = {
             what: string;
         };
@@ -54,7 +54,7 @@ describe(defineTypedCustomEvent.name, () => {
         assert.deepEquals(instance.detail, instanceDetail);
     });
 
-    it('should work with a TypedEventTarget', () => {
+    it('works with a TypedEventTarget', () => {
         class MyCustomEvent extends defineTypedCustomEvent<{stuff: string}>()('my-type') {}
 
         class MyEventTarget extends TypedEventTarget<MyCustomEvent> {}
