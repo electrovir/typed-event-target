@@ -23,7 +23,8 @@ export type TypedCustomEventInit<EventDetail> = SetRequired<CustomEventInit<Even
  * is the same as `defineTypedEvent` but with a detail property for storing arbitrary data.
  *
  * This needs to be called twice in order to properly bind both the detail type generic and the
- * event type string.
+ * event type string. Defined events bubble and cross shadow boundaries by default. Explicit event
+ * init values override these defaults.
  *
  * @category Events
  * @example DefineTypedCustomEvent<DetailType>()('event-type-string');
@@ -35,7 +36,11 @@ export function defineTypedCustomEvent<const EventDetail = undefined>() {
             public static readonly type = type;
 
             constructor(eventInitDict: TypedCustomEventInit<EventDetail>) {
-                super(type, eventInitDict);
+                super(type, {
+                    bubbles: true,
+                    composed: true,
+                    ...eventInitDict,
+                });
             }
         };
 

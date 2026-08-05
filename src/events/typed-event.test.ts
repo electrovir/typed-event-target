@@ -25,6 +25,39 @@ describe(defineTypedEvent.name, () => {
         assert.strictEquals(derpTypedEvent.type, 'derp');
     });
 
+    it('bubbles and crosses shadow boundaries by default with explicit overrides', () => {
+        const MyEvent = defineTypedEvent('default-options-event');
+
+        const defaultEvent = new MyEvent();
+        const overriddenEvent = new MyEvent({
+            bubbles: false,
+            composed: false,
+        });
+
+        assert.deepEquals(
+            [
+                {
+                    bubbles: defaultEvent.bubbles,
+                    composed: defaultEvent.composed,
+                },
+                {
+                    bubbles: overriddenEvent.bubbles,
+                    composed: overriddenEvent.composed,
+                },
+            ],
+            [
+                {
+                    bubbles: true,
+                    composed: true,
+                },
+                {
+                    bubbles: false,
+                    composed: false,
+                },
+            ],
+        );
+    });
+
     it('extends a custom super class at runtime', () => {
         class MyCustomEvent extends Event {
             public readonly customProp = 'hello';

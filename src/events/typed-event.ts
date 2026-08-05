@@ -12,7 +12,8 @@ export interface TypedEvent<EventType extends string> extends Event {
 /**
  * Define an `Event` sub-class with a type tied to its event type string. Optionally accepts a
  * second parameter to specify a parent super class (must extend `Event`) instead of the default
- * `Event`.
+ * `Event`. Defined events bubble and cross shadow boundaries by default. Explicit event init values
+ * override these defaults.
  *
  * @category Events
  * @example
@@ -34,7 +35,11 @@ export function defineTypedEvent<
     const TypedEventConstructor = class extends ParentClass {
         public static readonly type = type;
         constructor(eventInitDict?: EventInit) {
-            super(type, eventInitDict);
+            super(type, {
+                bubbles: true,
+                composed: true,
+                ...eventInitDict,
+            });
         }
     };
 

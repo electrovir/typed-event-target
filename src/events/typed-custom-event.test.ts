@@ -54,6 +54,42 @@ describe(defineTypedCustomEvent.name, () => {
         assert.deepEquals(instance.detail, instanceDetail);
     });
 
+    it('bubbles and crosses shadow boundaries by default with explicit overrides', () => {
+        const MyCustomEvent = defineTypedCustomEvent<number>()('default-options-custom-event');
+
+        const defaultEvent = new MyCustomEvent({
+            detail: 1,
+        });
+        const overriddenEvent = new MyCustomEvent({
+            detail: 2,
+            bubbles: false,
+            composed: false,
+        });
+
+        assert.deepEquals(
+            [
+                {
+                    bubbles: defaultEvent.bubbles,
+                    composed: defaultEvent.composed,
+                },
+                {
+                    bubbles: overriddenEvent.bubbles,
+                    composed: overriddenEvent.composed,
+                },
+            ],
+            [
+                {
+                    bubbles: true,
+                    composed: true,
+                },
+                {
+                    bubbles: false,
+                    composed: false,
+                },
+            ],
+        );
+    });
+
     it('works with a TypedEventTarget', () => {
         class MyCustomEvent extends defineTypedCustomEvent<{stuff: string}>()('my-type') {}
 
