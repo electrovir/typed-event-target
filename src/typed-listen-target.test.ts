@@ -35,7 +35,7 @@ describe(TypedListenTarget.name, () => {
         const removeListener = instance.listenToAll((event) => {
             events.push(event);
         });
-        const originalListener2 = () => {};
+        function originalListener2() {}
 
         instance.listenToAll(originalListener2, {
             once: true,
@@ -64,7 +64,7 @@ describe(TypedListenTarget.name, () => {
     it('can remove universal listeners', () => {
         const instance = new TypedListenTarget<TestEvent>();
 
-        const originalListener = () => {};
+        function originalListener() {}
 
         instance.listenToAll(originalListener, {
             once: true,

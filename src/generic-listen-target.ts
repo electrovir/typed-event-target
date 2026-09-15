@@ -60,9 +60,9 @@ export class GenericListenTarget {
 
         const innerMap = this.getOrCreateInnerMap(eventClass);
 
-        const removeListener = (): boolean => {
+        function removeListener(): boolean {
             return innerMap.delete(genericCallback);
-        };
+        }
 
         function wrappedCallback(event: Event, removeSelf: RemoveListenerCallback) {
             if (options.once) {
