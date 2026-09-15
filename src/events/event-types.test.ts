@@ -1,3 +1,4 @@
+import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {type ExtractEventByType, type ExtractEventTypes} from './event-types.js';
 import {type PossibleEvent, SubEventDerp, SubEventHerp, SubEventTypeEnum} from './events.mock.js';
@@ -16,8 +17,6 @@ describe('ExtractEventByType', () => {
         // @ts-expect-error: SubEventHerp should not be SubEventDerp
         const invalidInstance: NarrowedType = new SubEventHerp();
     });
-
-    it('restricts event dispatches to given types', () => {});
 });
 
 describe('ExtractEventTypes', () => {
@@ -32,5 +31,11 @@ describe('ExtractEventTypes', () => {
         const invalidType2: PossibleEventTypes = 'derp';
         // @ts-expect-error: mismatched strings
         const invalidType3: PossibleEventTypes = 'whatever';
+    });
+
+    it('works on generic events', () => {
+        type GenericExtraction = ExtractEventTypes<Event>;
+
+        assert.tsType<GenericExtraction>().equals<string>();
     });
 });
